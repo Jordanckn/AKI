@@ -1,0 +1,183 @@
+[build]
+  publish = "dist"
+  command = "npm run build && npm run generate-sitemap && npm run generate-dictionary-sitemap"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Configuration pour les SPA (Single Page Applications)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Redirections SEO (depuis _redirects mais en format netlify.toml)
+[[redirects]]
+  from = "/market"
+  to = "/marche-cryptomonnaies-temps-reel"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge"
+  to = "/comprendre-les-cryptomonnaies"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto"
+  to = "/formation/comprendre-la-crypto"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-1"
+  to = "/formation/comprendre-la-crypto/fondamentaux-blockchain"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-2"
+  to = "/formation/comprendre-la-crypto/principes-decentralisation"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-3"
+  to = "/formation/comprendre-la-crypto/cryptographie-securite"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-4"
+  to = "/formation/comprendre-la-crypto/types-blockchain"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-5"
+  to = "/formation/comprendre-la-crypto/bitcoin-histoire"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-6"
+  to = "/formation/comprendre-la-crypto/ethereum-smart-contracts"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-7"
+  to = "/formation/comprendre-la-crypto/types-tokens"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-8"
+  to = "/formation/comprendre-la-crypto/securite-wallets"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-9"
+  to = "/formation/comprendre-la-crypto/indicateurs-techniques"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-10"
+  to = "/formation/comprendre-la-crypto/analyse-graphiques"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-11"
+  to = "/formation/comprendre-la-crypto/patterns-trading"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-12"
+  to = "/formation/comprendre-la-crypto/gestion-risque"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-13"
+  to = "/formation/comprendre-la-crypto/protocoles-defi"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-14"
+  to = "/formation/comprendre-la-crypto/yield-farming"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-15"
+  to = "/formation/comprendre-la-crypto/pools-liquidite"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-16"
+  to = "/formation/comprendre-la-crypto/stablecoins"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-17"
+  to = "/formation/comprendre-la-crypto/securisation-wallets"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-18"
+  to = "/formation/comprendre-la-crypto/arnaques-crypto"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-19"
+  to = "/formation/comprendre-la-crypto/gestion-portfolio"
+  status = 301
+
+[[redirects]]
+  from = "/knowledge/crypto/module-20"
+  to = "/formation/comprendre-la-crypto/strategies-avancees"
+  status = 301
+
+[[redirects]]
+  from = "/course-completion"
+  to = "/formation/certificat-reussite"
+  status = 301
+
+[[redirects]]
+  from = "/company-policy"
+  to = "/politique-entreprise"
+  status = 301
+
+[[redirects]]
+  from = "/dictionary"
+  to = "/dictionnaire-crypto"
+  status = 301
+
+[[redirects]]
+  from = "/dictionary/*"
+  to = "/dictionnaire-crypto/:splat"
+  status = 301
+
+# Headers pour la sécurité
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Headers spécifiques pour les articles (optimisation partage social)
+[[headers]]
+  for = "/articles/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, s-maxage=7200"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Headers pour les images (optimisation partage social)
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    
+[[headers]]
+  for = "*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

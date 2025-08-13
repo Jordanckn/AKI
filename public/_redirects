@@ -1,0 +1,30 @@
+/* /index.html 200
+
+# Legacy URL redirects
+/market /marche-cryptomonnaies-temps-reel 301
+/knowledge /comprendre-les-cryptomonnaies 301
+/knowledge/crypto /formation/comprendre-la-crypto 301
+/knowledge/crypto/module-1 /formation/comprendre-la-crypto/fondamentaux-blockchain 301
+/knowledge/crypto/module-2 /formation/comprendre-la-crypto/principes-decentralisation 301
+/knowledge/crypto/module-3 /formation/comprendre-la-crypto/cryptographie-securite 301
+/knowledge/crypto/module-4 /formation/comprendre-la-crypto/types-blockchain 301
+/knowledge/crypto/module-5 /formation/comprendre-la-crypto/bitcoin-histoire 301
+/knowledge/crypto/module-6 /formation/comprendre-la-crypto/ethereum-smart-contracts 301
+/knowledge/crypto/module-7 /formation/comprendre-la-crypto/types-tokens 301
+/knowledge/crypto/module-8 /formation/comprendre-la-crypto/securite-wallets 301
+/knowledge/crypto/module-9 /formation/comprendre-la-crypto/indicateurs-techniques 301
+/knowledge/crypto/module-10 /formation/comprendre-la-crypto/analyse-graphiques 301
+/knowledge/crypto/module-11 /formation/comprendre-la-crypto/patterns-trading 301
+/knowledge/crypto/module-12 /formation/comprendre-la-crypto/gestion-risque 301
+/knowledge/crypto/module-13 /formation/comprendre-la-crypto/protocoles-defi 301
+/knowledge/crypto/module-14 /formation/comprendre-la-crypto/yield-farming 301
+/knowledge/crypto/module-15 /formation/comprendre-la-crypto/pools-liquidite 301
+/knowledge/crypto/module-16 /formation/comprendre-la-crypto/stablecoins 301
+/knowledge/crypto/module-17 /formation/comprendre-la-crypto/securisation-wallets 301
+/knowledge/crypto/module-18 /formation/comprendre-la-crypto/arnaques-crypto 301
+/knowledge/crypto/module-19 /formation/comprendre-la-crypto/gestion-portfolio 301
+/knowledge/crypto/module-20 /formation/comprendre-la-crypto/strategies-avancees 301
+/course-completion /formation/certificat-reussite 301
+/company-policy /politique-entreprise 301
+/dictionary /dictionnaire-crypto 301
+/dictionary/* /dictionnaire-crypto/:splat 301
