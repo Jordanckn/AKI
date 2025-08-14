@@ -154,4 +154,34 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* Navigation indicator system */
+  .nav-container {
+    position: relative;
+  }
+
+  .nav-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border-radius: 1px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(0);
+    opacity: 0;
+    z-index: 10;
+  }
+
+  .nav-indicator.active {
+    opacity: 1;
+  }
+
+  /* Remove individual indicators from nav items */
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-item::after {
+    display: none !important;
+  }
 }

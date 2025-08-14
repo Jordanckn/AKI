@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Search } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Logo from './Logo';
@@ -90,6 +91,12 @@ export default function Header({ onAuthClick }: HeaderProps) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
   const [knowledgeClicked, setKnowledgeClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeIndicator, setActiveIndicator] = useState<{
+    width: number;
+    left: number;
+    visible: boolean;
+  }>({ width: 0, left: 0, visible: false });
+  const navContainerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -118,6 +125,27 @@ export default function Header({ onAuthClick }: HeaderProps) {
       subscription.unsubscribe();
     };
   }, []);
+
+  // Handle indicator positioning
+  const updateIndicator = (element: HTMLElement | null) => {
+    if (!element || !navContainerRef.current) {
+      setActiveIndicator({ width: 0, left: 0, visible: false });
+      return;
+    }
+
+    const containerRect = navContainerRef.current.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    
+    setActiveIndicator({
+      width: elementRect.width,
+      left: elementRect.left - containerRect.left,
+      visible: true
+    });
+  };
+
+  const hideIndicator = () => {
+    setActiveIndicator(prev => ({ ...prev, visible: false }));
+  };
 
   const getSearchResults = (query: string) => {
     if (!query) return [];
@@ -227,7 +255,19 @@ export default function Header({ onAuthClick }: HeaderProps) {
           </div>
 
           <div className="hidden xl:flex xl:items-center xl:space-x-4 2xl:space-x-6">
-            <div className="flex items-center space-x-4 2xl:space-x-6">
+            <div 
+              ref={navContainerRef}
+              className="nav-container flex items-center space-x-4 2xl:space-x-6"
+            >
+              {/* Unified indicator */}
+              <div 
+                className={`nav-indicator ${activeIndicator.visible ? 'active' : ''}`}
+                style={{
+                  width: `${activeIndicator.width}px`,
+                  transform: `translateX(${activeIndicator.left}px)`
+                }}
+              />
+              
               {navigation.map((item) => (
                 <div 
                   key={item.name}
@@ -244,6 +284,8 @@ export default function Header({ onAuthClick }: HeaderProps) {
                         after:scale-x-0 hover:after:scale-x-100 after:transition-transform
                         flex items-center"
                       onClick={(e) => handleKnowledgeClick(item, e)}
+                      onMouseEnter={(e) => updateIndicator(e.currentTarget)}
+                      onMouseLeave={hideIndicator}
                     >
                       {item.name}
                       {item.submenu && (
@@ -261,6 +303,8 @@ export default function Header({ onAuthClick }: HeaderProps) {
                         flex items-center"
                       aria-expanded={showSubmenu === item.name}
                       aria-haspopup="true"
+                      onMouseEnter={(e) => updateIndicator(e.currentTarget)}
+                      onMouseLeave={hideIndicator}
                     >
                       {item.name}
                       <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -272,6 +316,8 @@ export default function Header({ onAuthClick }: HeaderProps) {
                       to={item.href}
                       className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
                         transition-all duration-300 hover:-translate-y-0.5 relative after:absolute 
+                      onMouseEnter={(e) => updateIndicator(e.currentTarget)}
+                      onMouseLeave={hideIndicator}
                         after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 
                         after:scale-x-0 hover:after:scale-x-100 after:transition-transform"
                     >
