@@ -90,18 +90,21 @@ export default function Header({ onAuthClick }: HeaderProps) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
   const [knowledgeClicked, setKnowledgeClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasScroll, setHasScroll] = useState(false);
   const [activeIndicator, setActiveIndicator] = useState<{
     width: number;
     left: number;
     visible: boolean;
   }>({ width: 0, left: 0, visible: false });
   const navContainerRef = useRef<HTMLDivElement>(null);
+  const navWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1280);
+      checkScrollable();
     };
     
     // Check if user is logged in
@@ -117,6 +120,8 @@ export default function Header({ onAuthClick }: HeaderProps) {
       setIsLoggedIn(!!session);
     });
 
+    // Check scrollable on mount and resize
+    checkScrollable();
     window.addEventListener('resize', handleResize);
     
     return () => {
@@ -125,7 +130,25 @@ export default function Header({ onAuthClick }: HeaderProps) {
     };
   }, []);
 
-  // Handle indicator positioning - Version finale
+  // Vérifier si le scroll est nécessaire
+  const checkScrollable = () => {
+    if (navContainerRef.current && !isMobile) {
+      const container = navContainerRef.current;
+      const hasScrollableContent = container.scrollWidth > container.clientWidth;
+      setHasScroll(hasScrollableContent);
+      
+      // Ajouter/retirer la classe pour les indicateurs visuels
+      if (navWrapperRef.current) {
+        if (hasScrollableContent) {
+          navWrapperRef.current.classList.add('has-scroll');
+        } else {
+          navWrapperRef.current.classList.remove('has-scroll');
+        }
+      }
+    }
+  };
+
+  // Handle indicator positioning - Version améliorée pour le scroll
   const updateIndicator = (element: HTMLElement | null) => {
     if (!element || !navContainerRef.current || isMobile) {
       setActiveIndicator({ width: 0, left: 0, visible: false });
@@ -135,11 +158,30 @@ export default function Header({ onAuthClick }: HeaderProps) {
     const containerRect = navContainerRef.current.getBoundingClientRect();
     const elementRect = element.getBoundingClientRect();
     
+    // Calculer la position relative au conteneur (en tenant compte du scroll)
+    const scrollLeft = navContainerRef.current.scrollLeft;
+    const elementLeft = elementRect.left - containerRect.left + scrollLeft;
+    
     setActiveIndicator({
       width: elementRect.width,
-      left: elementRect.left - containerRect.left,
+      left: elementLeft,
       visible: true
     });
+
+    // Auto-scroll vers l'élément actif si nécessaire
+    if (hasScroll) {
+      const containerWidth = navContainerRef.current.clientWidth;
+      const elementCenter = elementLeft + elementRect.width / 2;
+      const containerCenter = containerWidth / 2;
+      
+      if (elementCenter < scrollLeft + containerCenter - 100 || 
+          elementCenter > scrollLeft + containerCenter + 100) {
+        navContainerRef.current.scrollTo({
+          left: elementCenter - containerCenter,
+          behavior: 'smooth'
+        });
+      }
+    }
   };
 
   const hideIndicator = () => {
@@ -258,6 +300,15 @@ export default function Header({ onAuthClick }: HeaderProps) {
     }
   };
 
+  // Ajouter un effet pour recalculer après le rendu
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      checkScrollable();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [isMobile, navigation]);
+
   return (
     <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -274,126 +325,135 @@ export default function Header({ onAuthClick }: HeaderProps) {
           </div>
 
           <div className="hidden xl:flex xl:items-center xl:space-x-4 2xl:space-x-6">
+            {/* Wrapper avec indicateurs de scroll */}
             <div 
-              ref={navContainerRef}
-              className="nav-container flex items-center space-x-4 2xl:space-x-6"
-              style={{
-                '--indicator-left': `${activeIndicator.left}px`
-              } as React.CSSProperties}
+              ref={navWrapperRef}
+              className="nav-scroll-wrapper relative flex-1 max-w-2xl"
             >
-              {/* Indicateur unifié */}
               <div 
-                className={`nav-indicator ${activeIndicator.visible ? 'active' : ''}`}
+                ref={navContainerRef}
+                className="nav-container"
                 style={{
-                  width: `${activeIndicator.width}px`,
-                }}
-              />
-              
-              {navigation.map((item) => (
+                  '--indicator-left': `${activeIndicator.left}px`
+                } as React.CSSProperties}
+                onScroll={checkScrollable}
+              >
+                {/* Indicateur unifié */}
                 <div 
-                  key={item.name}
-                  className="nav-item relative group"
-                  onMouseEnter={() => item.submenu && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
-                  onMouseLeave={item.submenu ? handleMouseLeave : undefined}
-                >
-                  {item.name === 'Formation' ? (
-                    <Link
-                      to={item.href}
-                      data-nav-item={item.name}
-                      className="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 no-after"
-                      onClick={(e) => handleKnowledgeClick(item, e)}
-                      onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
-                      onMouseLeave={handleNavItemMouseLeave}
-                    >
-                      {item.name}
-                      {item.submenu && (
-                        <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  className={`nav-indicator ${activeIndicator.visible ? 'active' : ''}`}
+                  style={{
+                    width: `${activeIndicator.width}px`,
+                  }}
+                />
+                
+                {navigation.map((item) => (
+                  <div 
+                    key={item.name}
+                    className="nav-item force-nowrap scroll-snap-center"
+                    onMouseEnter={() => item.submenu && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
+                    onMouseLeave={item.submenu ? handleMouseLeave : undefined}
+                  >
+                    {item.name === 'Formation' ? (
+                      <Link
+                        to={item.href}
+                        data-nav-item={item.name}
+                        className="nav-link text-gray-700 hover:text-blue-600 text-sm font-medium 
+                          transition-all duration-300 no-after force-nowrap"
+                        onClick={(e) => handleKnowledgeClick(item, e)}
+                        onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                        onMouseLeave={handleNavItemMouseLeave}
+                        aria-current={location.pathname === item.href ? 'page' : undefined}
+                      >
+                        {item.name}
+                        {item.submenu && (
+                          <svg className="ml-1 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        )}
+                      </Link>
+                    ) : item.submenu ? (
+                      <button
+                        data-nav-item={item.name}
+                        className="nav-link text-gray-700 hover:text-blue-600 text-sm font-medium 
+                          transition-all duration-300 no-after force-nowrap"
+                        aria-expanded={showSubmenu === item.name}
+                        aria-haspopup="true"
+                        onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                        onMouseLeave={handleNavItemMouseLeave}
+                      >
+                        {item.name}
+                        <svg className="ml-1 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
-                      )}
-                    </Link>
-                  ) : item.submenu ? (
-                    <button
-                      data-nav-item={item.name}
-                      className="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 no-after"
-                      aria-expanded={showSubmenu === item.name}
-                      aria-haspopup="true"
-                      onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
-                      onMouseLeave={handleNavItemMouseLeave}
-                    >
-                      {item.name}
-                      <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                  ) : (
-                    <Link
-                      to={item.href}
-                      data-nav-item={item.name}
-                      className="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 no-after"
-                      onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
-                      onMouseLeave={handleNavItemMouseLeave}
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                  
-                  {item.submenu && showSubmenu === item.name && (
-                    <div
-                      className="absolute left-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 
-                        overflow-hidden z-50 transform opacity-100 scale-100 transition-all duration-200"
-                      onMouseEnter={() => !isMobile && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
-                      onMouseLeave={!isMobile ? handleMouseLeave : undefined}
-                      role="menu"
-                    >
-                      <div className="p-2">
-                        {item.submenu.map((subItem) => (
-                          <button
-                            key={subItem.name}
-                            onClick={() => handleSubmenuClick(subItem.href)}
-                            className="block w-full px-4 py-3 rounded-lg text-left
-                              transition-all duration-200 hover:bg-gray-50/80 
-                              hover:translate-x-1 focus:outline-none focus:ring-2 
-                              focus:ring-blue-500/20 focus:ring-offset-1"
-                            role="menuitem"
-                          >
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <span className="font-medium text-gray-900 block group-hover:text-blue-600
-                                  transition-colors duration-200">
-                                  {subItem.name}
-                                  {subItem.popular && (
-                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                                      font-medium bg-blue-100 text-blue-800">
-                                      Populaire
-                                    </span>
-                                  )}
-                                  {subItem.recommended && (
-                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                                      font-medium bg-green-100 text-green-800">
-                                      Recommandé
-                                    </span>
-                                  )}
-                                </span>
-                                <span className="text-sm text-gray-500 block">{subItem.description}</span>
+                      </button>
+                    ) : (
+                      <Link
+                        to={item.href}
+                        data-nav-item={item.name}
+                        className="nav-link text-gray-700 hover:text-blue-600 text-sm font-medium 
+                          transition-all duration-300 no-after force-nowrap"
+                        onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                        onMouseLeave={handleNavItemMouseLeave}
+                        aria-current={location.pathname === item.href ? 'page' : undefined}
+                      >
+                        {item.name}
+                      </Link>
+                    )}
+                    
+                    {item.submenu && showSubmenu === item.name && (
+                      <div
+                        className="absolute left-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 
+                          overflow-hidden z-50 transform opacity-100 scale-100 transition-all duration-200"
+                        onMouseEnter={() => !isMobile && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
+                        onMouseLeave={!isMobile ? handleMouseLeave : undefined}
+                        role="menu"
+                      >
+                        <div className="p-2">
+                          {item.submenu.map((subItem) => (
+                            <button
+                              key={subItem.name}
+                              onClick={() => handleSubmenuClick(subItem.href)}
+                              className="block w-full px-4 py-3 rounded-lg text-left
+                                transition-all duration-200 hover:bg-gray-50/80 
+                                hover:translate-x-1 focus:outline-none focus:ring-2 
+                                focus:ring-blue-500/20 focus:ring-offset-1"
+                              role="menuitem"
+                            >
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <span className="font-medium text-gray-900 block group-hover:text-blue-600
+                                    transition-colors duration-200">
+                                    {subItem.name}
+                                    {subItem.popular && (
+                                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                                        font-medium bg-blue-100 text-blue-800">
+                                        Populaire
+                                      </span>
+                                    )}
+                                    {subItem.recommended && (
+                                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                                        font-medium bg-green-100 text-green-800">
+                                        Recommandé
+                                      </span>
+                                    )}
+                                  </span>
+                                  <span className="text-sm text-gray-500 block">{subItem.description}</span>
+                                </div>
+                                {subItem.price && (
+                                  <span className="text-sm font-medium text-blue-600 flex-shrink-0">{subItem.price}</span>
+                                )}
                               </div>
-                              {subItem.price && (
-                                <span className="text-sm font-medium text-blue-600">{subItem.price}</span>
-                              )}
-                            </div>
-                          </button>
-                        ))}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <form onSubmit={handleSearch} className="relative group">
                 <input
                   type="text"
@@ -442,7 +502,9 @@ export default function Header({ onAuthClick }: HeaderProps) {
               )}
             </div>
 
-            <AuthButton onClick={onAuthClick} />
+            <div className="flex-shrink-0">
+              <AuthButton onClick={onAuthClick} />
+            </div>
           </div>
 
           <div className="xl:hidden flex items-center space-x-4">
@@ -581,20 +643,20 @@ export default function Header({ onAuthClick }: HeaderProps) {
                         role="menuitem"
                       >
                         <div className="flex justify-between items-center">
-                          <span>{subItem.name}</span>
+                          <span className="force-nowrap">{subItem.name}</span>
                           {subItem.price && (
-                            <span className="text-blue-600 font-medium">{subItem.price}</span>
+                            <span className="text-blue-600 font-medium force-nowrap">{subItem.price}</span>
                           )}
                         </div>
-                        <span className="text-xs text-gray-500">{subItem.description}</span>
+                        <span className="text-xs text-gray-500 block">{subItem.description}</span>
                         {subItem.popular && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                          <span className="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs 
                             font-medium bg-blue-100 text-blue-800">
                             Populaire
                           </span>
                         )}
                         {subItem.recommended && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                          <span className="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs 
                             font-medium bg-green-100 text-green-800">
                             Recommandé
                           </span>
