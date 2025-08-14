@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Search } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Logo from './Logo';
@@ -90,12 +90,36 @@ export default function Header({ onAuthClick }: HeaderProps) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
   const [knowledgeClicked, setKnowledgeClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasScroll, setHasScroll] = useState(false);
+  const [submenuPosition, setSubmenuPosition] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
+  const [activeIndicator, setActiveIndicator] = useState<{
+    width: number;
+    left: number;
+    visible: boolean;
+  }>({ width: 0, left: 0, visible: false });
+
+  // Calculer la position du sous-menu
+  const calculateSubmenuPosition = (element: HTMLElement | null) => {
+    if (!element) return { top: 0, left: 0 };
+    
+    const rect = element.getBoundingClientRect();
+    return {
+      top: rect.bottom + 8, // 8px de marge
+      left: rect.left
+    };
+  };
+  const navContainerRef = useRef<HTMLDivElement>(null);
+  const navWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1280);
+      checkScrollable();
     };
     
     // Check if user is logged in
@@ -111,6 +135,8 @@ export default function Header({ onAuthClick }: HeaderProps) {
       setIsLoggedIn(!!session);
     });
 
+    // Check scrollable on mount and resize
+    checkScrollable();
     window.addEventListener('resize', handleResize);
     
     return () => {
@@ -118,6 +144,68 @@ export default function Header({ onAuthClick }: HeaderProps) {
       subscription.unsubscribe();
     };
   }, []);
+
+  // Vérifier si le scroll est nécessaire
+  const checkScrollable = () => {
+    if (navWrapperRef.current && !isMobile) {
+      const wrapper = navWrapperRef.current;
+      const container = navContainerRef.current;
+      if (container) {
+        const hasScrollableContent = container.scrollWidth > wrapper.clientWidth;
+        setHasScroll(hasScrollableContent);
+        
+        // Ajouter/retirer la classe pour les indicateurs visuels
+        if (hasScrollableContent) {
+          wrapper.classList.add('has-scroll');
+        } else {
+          wrapper.classList.remove('has-scroll');
+        }
+      }
+    }
+  };
+
+  // Handle indicator positioning - Version corrigée pour alignement parfait
+  const updateIndicator = (element: HTMLElement | null) => {
+    if (!element || !navContainerRef.current || !navWrapperRef.current || isMobile) {
+      setActiveIndicator({ width: 0, left: 0, visible: false });
+      return;
+    }
+
+    const containerRect = navContainerRef.current.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    
+    // Calculer la position exacte relative au conteneur (sans le scroll)
+    const elementLeft = elementRect.left - containerRect.left;
+    
+    setActiveIndicator({
+      width: elementRect.width,
+      left: elementLeft,
+      visible: true
+    });
+
+    // Auto-scroll vers l'élément actif si nécessaire
+    if (hasScroll) {
+      const wrapperWidth = navWrapperRef.current.clientWidth;
+      const elementCenter = elementLeft + elementRect.width / 2;
+      const wrapperCenter = wrapperWidth / 2;
+      const scrollLeft = navWrapperRef.current.scrollLeft;
+      
+      if (elementCenter < scrollLeft + 100 || 
+          elementCenter > scrollLeft + wrapperWidth - 100) {
+        const targetScroll = Math.max(0, elementLeft - wrapperCenter + elementRect.width / 2);
+        navWrapperRef.current.scrollTo({
+          left: targetScroll,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
+  const hideIndicator = () => {
+    if (!isMobile) {
+      setActiveIndicator(prev => ({ ...prev, visible: false }));
+    }
+  };
 
   const getSearchResults = (query: string) => {
     if (!query) return [];
@@ -174,23 +262,45 @@ export default function Header({ onAuthClick }: HeaderProps) {
     }
   };
 
-  const handleMouseEnter = (name: string) => {
+  // Gestion des sous-menus et indicateur
+  const handleMouseEnter = (name: string, element: HTMLElement) => {
+    if (isMobile) return;
+    
     if (submenuTimeout) {
       clearTimeout(submenuTimeout);
       setSubmenuTimeout(null);
     }
     setShowSubmenu(name);
+    updateIndicator(element);
+    
+    // Calculer et définir la position du sous-menu
+    const position = calculateSubmenuPosition(element);
+    setSubmenuPosition(position);
   };
 
   const handleMouseLeave = () => {
+    if (isMobile) return;
+    
     const timeout = setTimeout(() => {
       setShowSubmenu(null);
+      hideIndicator();
     }, 300);
     setSubmenuTimeout(timeout);
   };
 
+  const handleNavItemMouseEnter = (element: HTMLElement) => {
+    if (!isMobile && !showSubmenu) {
+      updateIndicator(element);
+    }
+  };
+
+  const handleNavItemMouseLeave = () => {
+    if (!isMobile && !showSubmenu) {
+      hideIndicator();
+    }
+  };
+
   const handleKnowledgeClick = (item: any, e: React.MouseEvent) => {
-    // If user is not authenticated or doesn't have access, show modal
     if (isMobile && item.submenu) {
       e.preventDefault();
       if (!knowledgeClicked) {
@@ -211,6 +321,15 @@ export default function Header({ onAuthClick }: HeaderProps) {
     }
   };
 
+  // Ajouter un effet pour recalculer après le rendu
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      checkScrollable();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [isMobile, navigation]);
+
   return (
     <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -227,111 +346,142 @@ export default function Header({ onAuthClick }: HeaderProps) {
           </div>
 
           <div className="hidden xl:flex xl:items-center xl:space-x-4 2xl:space-x-6">
-            <div className="flex items-center space-x-4 2xl:space-x-6">
-              {navigation.map((item) => (
+            {/* Wrapper avec indicateurs de scroll */}
+            <div 
+              ref={navWrapperRef}
+              className="nav-scroll-wrapper relative flex-1 max-w-2xl"
+              onScroll={checkScrollable}
+            >
+              <div 
+                ref={navContainerRef}
+                className="nav-container"
+                style={{
+                  '--indicator-left': `${activeIndicator.left}px`
+                } as React.CSSProperties}
+              >
+                {/* Indicateur unifié avec position exacte */}
                 <div 
-                  key={item.name}
-                  className="relative group"
-                  onMouseEnter={() => !isMobile && handleMouseEnter(item.name)}
-                  onMouseLeave={!isMobile ? handleMouseLeave : undefined}
-                >
-                  {item.name === 'Formation' ? (
-                    <Link
-                      to={item.href}
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 hover:-translate-y-0.5 relative after:absolute 
-                        after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 
-                        after:scale-x-0 hover:after:scale-x-100 after:transition-transform
-                        flex items-center"
-                      onClick={(e) => handleKnowledgeClick(item, e)}
-                    >
-                      {item.name}
-                      {item.submenu && (
-                        <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  className={`nav-indicator ${activeIndicator.visible ? 'active' : ''}`}
+                  style={{
+                    width: `${activeIndicator.width}px`,
+                    '--indicator-left': `${activeIndicator.left}px`
+                  } as React.CSSProperties}
+                />
+                
+                {navigation.map((item) => (
+                  <div 
+                    key={item.name}
+                    className="nav-item force-nowrap scroll-snap-center"
+                    onMouseEnter={() => item.submenu && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
+                    onMouseLeave={item.submenu ? handleMouseLeave : undefined}
+                  >
+                    {item.name === 'Formation' ? (
+                      <Link
+                        to={item.href}
+                        data-nav-item={item.name}
+                        className="nav-link text-gray-700 hover:text-blue-600 text-sm font-medium 
+                          transition-all duration-300 no-after force-nowrap"
+                        onClick={(e) => handleKnowledgeClick(item, e)}
+                        onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                        onMouseLeave={handleNavItemMouseLeave}
+                        aria-current={location.pathname === item.href ? 'page' : undefined}
+                      >
+                        {item.name}
+                        {item.submenu && (
+                          <svg className="ml-1 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        )}
+                      </Link>
+                    ) : item.submenu ? (
+                      <button
+                        data-nav-item={item.name}
+                        className="nav-link text-gray-700 hover:text-blue-600 text-sm font-medium 
+                          transition-all duration-300 no-after force-nowrap"
+                        aria-expanded={showSubmenu === item.name}
+                        aria-haspopup="true"
+                        onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                        onMouseLeave={handleNavItemMouseLeave}
+                      >
+                        {item.name}
+                        <svg className="ml-1 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
-                      )}
-                    </Link>
-                  ) : item.submenu ? (
-                    <button
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 hover:-translate-y-0.5 relative after:absolute 
-                        after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 
-                        after:scale-x-0 hover:after:scale-x-100 after:transition-transform
-                        flex items-center"
-                      aria-expanded={showSubmenu === item.name}
-                      aria-haspopup="true"
-                    >
-                      {item.name}
-                      <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                  ) : (
-                    <Link
-                      to={item.href}
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 hover:-translate-y-0.5 relative after:absolute 
-                        after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 
-                        after:scale-x-0 hover:after:scale-x-100 after:transition-transform"
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                  
-                  {item.submenu && showSubmenu === item.name && (
-                    <div
-                      className="absolute left-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 
-                        overflow-hidden z-50 transform opacity-100 scale-100 transition-all duration-200"
-                      onMouseEnter={() => !isMobile && handleMouseEnter(item.name)}
-                      onMouseLeave={!isMobile ? handleMouseLeave : undefined}
-                      role="menu"
-                    >
-                      <div className="p-2">
-                        {item.submenu.map((subItem) => (
-                          <button
-                            key={subItem.name}
-                            onClick={() => handleSubmenuClick(subItem.href)}
-                            className="block w-full px-4 py-3 rounded-lg text-left
-                              transition-all duration-200 hover:bg-gray-50/80 
-                              hover:translate-x-1 focus:outline-none focus:ring-2 
-                              focus:ring-blue-500/20 focus:ring-offset-1"
-                            role="menuitem"
-                          >
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <span className="font-medium text-gray-900 block group-hover:text-blue-600
-                                  transition-colors duration-200">
-                                  {subItem.name}
-                                  {subItem.popular && (
-                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                                      font-medium bg-blue-100 text-blue-800">
-                                      Populaire
-                                    </span>
-                                  )}
-                                  {subItem.recommended && (
-                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                                      font-medium bg-green-100 text-green-800">
-                                      Recommandé
-                                    </span>
-                                  )}
-                                </span>
-                                <span className="text-sm text-gray-500 block">{subItem.description}</span>
+                      </button>
+                    ) : (
+                      <Link
+                        to={item.href}
+                        data-nav-item={item.name}
+                        className="nav-link text-gray-700 hover:text-blue-600 text-sm font-medium 
+                          transition-all duration-300 no-after force-nowrap"
+                        onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                        onMouseLeave={handleNavItemMouseLeave}
+                        aria-current={location.pathname === item.href ? 'page' : undefined}
+                      >
+                        {item.name}
+                      </Link>
+                    )}
+                    
+                    {item.submenu && showSubmenu === item.name && (
+                      <div
+                        className="nav-submenu bg-white rounded-xl shadow-lg border border-gray-100 
+                          overflow-hidden transform opacity-100 scale-100 transition-all duration-200"
+                        style={{
+                          top: submenuPosition.top,
+                          left: submenuPosition.left,
+                        }}
+                        onMouseEnter={() => !isMobile && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
+                        onMouseLeave={!isMobile ? handleMouseLeave : undefined}
+                        role="menu"
+                      >
+                        <div className="p-2">
+                          {item.submenu.map((subItem) => (
+                            <button
+                              key={subItem.name}
+                              onClick={() => handleSubmenuClick(subItem.href)}
+                              className="block w-full px-4 py-3 rounded-lg text-left
+                                transition-all duration-200 hover:bg-gray-50/80 
+                                hover:translate-x-1 focus:outline-none focus:ring-2 
+                                focus:ring-blue-500/20 focus:ring-offset-1"
+                              role="menuitem"
+                            >
+                              <div className="submenu-item-container">
+                                <div className="submenu-item-content">
+                                  <div className="submenu-item-title font-medium text-gray-900 group-hover:text-blue-600
+                                    transition-colors duration-200">
+                                    {subItem.name}
+                                    {subItem.popular && (
+                                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                                        font-medium bg-blue-100 text-blue-800 force-nowrap">
+                                        Populaire
+                                      </span>
+                                    )}
+                                    {subItem.recommended && (
+                                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                                        font-medium bg-green-100 text-green-800 force-nowrap">
+                                        Recommandé
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="submenu-item-description text-sm text-gray-500 mt-1">{subItem.description}</div>
+                                </div>
+                                {subItem.price && (
+                                  <div className="submenu-item-price-section">
+                                    <span className="submenu-item-price text-sm font-medium text-blue-600">{subItem.price}</span>
+                                  </div>
+                                )}
                               </div>
-                              {subItem.price && (
-                                <span className="text-sm font-medium text-blue-600">{subItem.price}</span>
-                              )}
-                            </div>
-                          </button>
-                        ))}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <form onSubmit={handleSearch} className="relative group">
                 <input
                   type="text"
@@ -353,7 +503,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
               </form>
 
               {showResults && searchQuery && (
-                <div className="absolute mt-2 w-64 bg-white rounded-xl shadow-soft border 
+                <div className="absolute mt-2 w-64 bg-white rounded-xl shadow-lg border 
                   border-gray-100 overflow-hidden z-50 animate-fade-in-up" role="listbox">
                   {getSearchResults(searchQuery).length > 0 ? (
                     <ul>
@@ -380,7 +530,9 @@ export default function Header({ onAuthClick }: HeaderProps) {
               )}
             </div>
 
-            <AuthButton onClick={onAuthClick} />
+            <div className="flex-shrink-0">
+              <AuthButton onClick={onAuthClick} />
+            </div>
           </div>
 
           <div className="xl:hidden flex items-center space-x-4">
@@ -402,6 +554,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
           </div>
         </div>
 
+        {/* Menu mobile */}
         <div
           className={`xl:hidden transition-all duration-300 ease-in-out ${
             isOpen
@@ -429,7 +582,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
             </form>
 
             {showResults && searchQuery && (
-              <div className="mb-4 bg-white rounded-xl shadow-soft border border-gray-100 
+              <div className="mb-4 bg-white rounded-xl shadow-lg border border-gray-100 
                 overflow-hidden animate-fade-in-up" role="listbox">
                 {getSearchResults(searchQuery).length > 0 ? (
                   <ul>
@@ -518,20 +671,20 @@ export default function Header({ onAuthClick }: HeaderProps) {
                         role="menuitem"
                       >
                         <div className="flex justify-between items-center">
-                          <span>{subItem.name}</span>
+                          <span className="force-nowrap">{subItem.name}</span>
                           {subItem.price && (
-                            <span className="text-blue-600 font-medium">{subItem.price}</span>
+                            <span className="text-blue-600 font-medium force-nowrap">{subItem.price}</span>
                           )}
                         </div>
-                        <span className="text-xs text-gray-500">{subItem.description}</span>
+                        <span className="text-xs text-gray-500 block">{subItem.description}</span>
                         {subItem.popular && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                          <span className="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs 
                             font-medium bg-blue-100 text-blue-800">
                             Populaire
                           </span>
                         )}
                         {subItem.recommended && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                          <span className="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs 
                             font-medium bg-green-100 text-green-800">
                             Recommandé
                           </span>
