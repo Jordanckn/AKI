@@ -189,7 +189,7 @@
     height: 0;
   }
 
-  /* Indicateur de navigation unifié */
+  /* Indicateur de navigation unifié - Version corrigée pour alignement parfait */
   .nav-indicator {
     position: absolute;
     bottom: 0;
@@ -199,7 +199,7 @@
     border-radius: 1px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
-    transform: translateX(0) scaleX(0);
+    transform: translateX(var(--indicator-left, 0)) scaleX(0);
     transform-origin: left center;
     z-index: 10;
     pointer-events: none;
