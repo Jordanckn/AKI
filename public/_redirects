@@ -1,6 +1,4 @@
-/* /index.html 200
-
-# Legacy URL redirects
+# Legacy URL redirects (redirections spécifiques d'abord)
 /market /marche-cryptomonnaies-temps-reel 301
 /knowledge /comprendre-les-cryptomonnaies 301
 /knowledge/crypto /formation/comprendre-la-crypto 301
@@ -28,3 +26,6 @@
 /company-policy /politique-entreprise 301
 /dictionary /dictionnaire-crypto 301
 /dictionary/* /dictionnaire-crypto/:splat 301
+
+# SPA fallback - DOIT être en dernier pour que React Router gère les routes dynamiques
+/* /index.html 200
