@@ -91,11 +91,26 @@ export default function Header({ onAuthClick }: HeaderProps) {
   const [knowledgeClicked, setKnowledgeClicked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasScroll, setHasScroll] = useState(false);
+  const [submenuPosition, setSubmenuPosition] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
   const [activeIndicator, setActiveIndicator] = useState<{
     width: number;
     left: number;
     visible: boolean;
   }>({ width: 0, left: 0, visible: false });
+
+  // Calculer la position du sous-menu
+  const calculateSubmenuPosition = (element: HTMLElement | null) => {
+    if (!element) return { top: 0, left: 0 };
+    
+    const rect = element.getBoundingClientRect();
+    return {
+      top: rect.bottom + 8, // 8px de marge
+      left: rect.left
+    };
+  };
   const navContainerRef = useRef<HTMLDivElement>(null);
   const navWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -256,6 +271,10 @@ export default function Header({ onAuthClick }: HeaderProps) {
     }
     setShowSubmenu(name);
     updateIndicator(element);
+    
+    // Calculer et définir la position du sous-menu
+    const position = calculateSubmenuPosition(element);
+    setSubmenuPosition(position);
   };
 
   const handleMouseLeave = () => {
@@ -404,7 +423,11 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     {item.submenu && showSubmenu === item.name && (
                       <div
                         className="nav-submenu w-80 bg-white rounded-xl shadow-lg border border-gray-100 
-                          overflow-hidden z-50 transform opacity-100 scale-100 transition-all duration-200"
+                          overflow-hidden transform opacity-100 scale-100 transition-all duration-200"
+                        style={{
+                          top: submenuPosition.top,
+                          left: submenuPosition.left,
+                        }}
                         onMouseEnter={() => !isMobile && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
                         onMouseLeave={!isMobile ? handleMouseLeave : undefined}
                         role="menu"
