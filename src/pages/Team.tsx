@@ -4,7 +4,7 @@ import SEOHead from '../components/SEOHead';
 
 // Images depuis le stockage Supabase ou URLs externes
 const jordanImage = "https://zythhpgukkgavtgsudqe.supabase.co/storage/v1/object/public/images-public/Jordan-chekroun-CEO-AlyahKnowledge-crpypto-formation-investissement-plateforme.jpg";
-const yoannImage = "https://zythhpgukkgavtgsudqe.supabase.co/storage/v1/object/public/images-public/Jordan-chekroun-CEO-AlyahKnowledge-crpypto-formation-investissement-plateforme.jpg";
+const yoannImage = "https://zythhpgukkgavtgsudqe.supabase.co/storage/v1/object/public/images-public/Yoann-hadjadj.jpg";
 
 const values = [
   { id: 1, text: "Intégrité", gradient: "from-blue-600 via-cyan-600 to-teal-600" },
