@@ -3,7 +3,7 @@ import { Shield, LineChart, Lock, MessageSquare } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
 
 // Images depuis le stockage Supabase ou URLs externes
-const jordanImage = "https://zythhpgukkgavtgsudqe.supabase.co/storage/v1/object/public/images-public/jordan-chekroun-alyah-knowledge.jpg";
+const jordanImage = "https://zythhpgukkgavtgsudqe.supabase.co/storage/v1/object/public/images-public/Jordan-chekroun-CEO-AlyahKnowledge-crpypto-formation-investissement-plateforme.jpg";
 const yoannImage = "https://zythhpgukkgavtgsudqe.supabase.co/storage/v1/object/public/images-public/yoann-hadjadj-alyah-knowledge.jpg";
 
 const values = [
