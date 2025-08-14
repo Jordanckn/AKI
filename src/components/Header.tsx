@@ -164,7 +164,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
     }
   };
 
-  // Handle indicator positioning - Version améliorée pour le scroll
+  // Handle indicator positioning - Version corrigée pour alignement parfait
   const updateIndicator = (element: HTMLElement | null) => {
     if (!element || !navContainerRef.current || !navWrapperRef.current || isMobile) {
       setActiveIndicator({ width: 0, left: 0, visible: false });
@@ -174,9 +174,8 @@ export default function Header({ onAuthClick }: HeaderProps) {
     const containerRect = navContainerRef.current.getBoundingClientRect();
     const elementRect = element.getBoundingClientRect();
     
-    // Calculer la position relative au conteneur (en tenant compte du scroll)
-    const scrollLeft = navWrapperRef.current.scrollLeft;
-    const elementLeft = elementRect.left - containerRect.left + scrollLeft;
+    // Calculer la position exacte relative au conteneur (sans le scroll)
+    const elementLeft = elementRect.left - containerRect.left;
     
     setActiveIndicator({
       width: elementRect.width,
@@ -189,11 +188,13 @@ export default function Header({ onAuthClick }: HeaderProps) {
       const wrapperWidth = navWrapperRef.current.clientWidth;
       const elementCenter = elementLeft + elementRect.width / 2;
       const wrapperCenter = wrapperWidth / 2;
+      const scrollLeft = navWrapperRef.current.scrollLeft;
       
-      if (elementCenter < scrollLeft + wrapperCenter - 100 || 
-          elementCenter > scrollLeft + wrapperCenter + 100) {
+      if (elementCenter < scrollLeft + 100 || 
+          elementCenter > scrollLeft + wrapperWidth - 100) {
+        const targetScroll = Math.max(0, elementLeft - wrapperCenter + elementRect.width / 2);
         navWrapperRef.current.scrollTo({
-          left: elementCenter - wrapperCenter,
+          left: targetScroll,
           behavior: 'smooth'
         });
       }
@@ -358,12 +359,13 @@ export default function Header({ onAuthClick }: HeaderProps) {
                   '--indicator-left': `${activeIndicator.left}px`
                 } as React.CSSProperties}
               >
-                {/* Indicateur unifié */}
+                {/* Indicateur unifié avec position exacte */}
                 <div 
                   className={`nav-indicator ${activeIndicator.visible ? 'active' : ''}`}
                   style={{
                     width: `${activeIndicator.width}px`,
-                  }}
+                    '--indicator-left': `${activeIndicator.left}px`
+                  } as React.CSSProperties}
                 />
                 
                 {navigation.map((item) => (
