@@ -334,9 +334,17 @@
     }
   }
 
-  /* Indicateurs visuels optionnels pour le scroll */
+  /* Indicateurs visuels pour le scroll - VERSION CORRIGÉE */
   .nav-scroll-wrapper {
     position: relative;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* Masquer la scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
 
   .nav-scroll-wrapper::before,
@@ -350,6 +358,8 @@
     z-index: 5;
     opacity: 0;
     transition: opacity 0.3s ease;
+    /* IMPORTANT: Ne pas activer par défaut pour éviter le masquage */
+    display: none;
   }
 
   .nav-scroll-wrapper::before {
@@ -362,9 +372,17 @@
     background: linear-gradient(to left, rgba(255,255,255,0.9), transparent);
   }
 
-  .nav-scroll-wrapper.has-scroll::before,
-  .nav-scroll-wrapper.has-scroll::after {
+  /* N'activer les indicateurs QUE si on scroll vraiment */
+  .nav-scroll-wrapper.has-scroll.is-scrolling::before,
+  .nav-scroll-wrapper.has-scroll.is-scrolling::after {
+    display: block;
     opacity: 1;
+  }
+
+  /* Alternative : désactiver complètement les indicateurs de scroll */
+  .nav-scroll-wrapper.no-scroll-indicators::before,
+  .nav-scroll-wrapper.no-scroll-indicators::after {
+    display: none !important;
   }
 }
 
