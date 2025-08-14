@@ -154,14 +154,35 @@
     flex-wrap: nowrap;
     /* Espacement constant */
     gap: 1rem;
-    /* Padding pour éviter la coupure */
+    /* Padding pour éviter la coupure des sous-menus */
     padding-bottom: 2px;
+    /* IMPORTANT: Permettre aux sous-menus de dépasser */
+    overflow: visible;
     /* Masquer la scrollbar tout en gardant la fonctionnalité */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
 
-  /* Masquer la scrollbar sur WebKit */
+  /* Wrapper pour gérer le scroll horizontal séparément */
+  .nav-scroll-wrapper {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* Masquer la scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  .nav-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* Masquer la scrollbar sur WebKit - uniquement pour le wrapper */
   .nav-container::-webkit-scrollbar {
     display: none;
     width: 0;
@@ -196,6 +217,8 @@
     scroll-snap-align: center;
     /* Forcer le texte sur une ligne */
     white-space: nowrap;
+    /* IMPORTANT: Permettre aux sous-menus de dépasser verticalement */
+    overflow: visible;
   }
 
   /* Force la suppression de tous les pseudo-éléments after qui créent des conflits */
@@ -203,6 +226,26 @@
   .nav-item::before {
     display: none !important;
     content: none !important;
+  }
+
+  /* Ajustement pour éviter que le scroll masque les dropdowns */
+  .nav-scroll-wrapper {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* Masquer la scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  /* Correction pour les sous-menus - Utiliser fixed pour éviter les problèmes d'overflow */
+  .nav-submenu {
+    position: fixed;
+    z-index: 1000;
+    /* Le positionnement sera calculé via JavaScript */
   }
 
   /* Liens de navigation */
