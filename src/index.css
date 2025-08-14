@@ -138,13 +138,37 @@
     overflow: hidden;
   }
 
-  /* Navigation indicator system - VERSION CORRIGÉE */
+  /* Navigation system with horizontal scroll - VERSION CORRIGÉE */
   .nav-container {
     position: relative;
-    /* Assurer une hauteur constante pour l'indicateur */
+    display: flex;
+    align-items: center;
+    /* Scroll horizontal avec snap */
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* Forcer une ligne */
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    /* Espacement constant */
+    gap: 1rem;
+    /* Padding pour éviter la coupure */
     padding-bottom: 2px;
+    /* Masquer la scrollbar tout en gardant la fonctionnalité */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
 
+  /* Masquer la scrollbar sur WebKit */
+  .nav-container::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* Indicateur de navigation unifié */
   .nav-indicator {
     position: absolute;
     bottom: 0;
@@ -165,25 +189,35 @@
     transform: translateX(var(--indicator-left, 0)) scaleX(1);
   }
 
-  /* Styles pour les éléments de navigation */
+  /* Items de navigation */
   .nav-item {
     position: relative;
-    /* Supprimer tous les pseudo-éléments after qui créent des conflits */
+    flex-shrink: 0; /* Empêcher la réduction */
+    scroll-snap-align: center;
+    /* Forcer le texte sur une ligne */
+    white-space: nowrap;
   }
 
-  /* Force la suppression de tous les pseudo-éléments after sur les nav-items */
+  /* Force la suppression de tous les pseudo-éléments after qui créent des conflits */
   .nav-item::after,
   .nav-item::before {
     display: none !important;
     content: none !important;
   }
 
-  /* Styles pour les liens de navigation */
+  /* Liens de navigation */
   .nav-link {
     position: relative;
     display: inline-flex;
     align-items: center;
     transition: color 0.3s ease, transform 0.3s ease;
+    /* Empêcher le wrapping du texte */
+    white-space: nowrap;
+    hyphens: none;
+    word-break: keep-all;
+    /* Padding uniforme */
+    padding: 0.5rem 0.75rem;
+    min-width: max-content;
   }
 
   /* Hover effect sans pseudo-éléments */
@@ -192,15 +226,55 @@
     transform: translateY(-1px);
   }
 
-  /* S'assurer qu'aucun pseudo-élément n'est créé par Tailwind */
+  /* S'assurer qu'aucun pseudo-élément n'est créé */
   .nav-link::after,
   .nav-link::before {
     display: none !important;
     content: none !important;
   }
+
+  /* Responsiveness pour l'espacement */
+  @media (min-width: 1536px) {
+    .nav-container {
+      gap: 1.5rem;
+    }
+  }
+
+  /* Indicateurs visuels optionnels pour le scroll */
+  .nav-scroll-wrapper {
+    position: relative;
+  }
+
+  .nav-scroll-wrapper::before,
+  .nav-scroll-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-scroll-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(255,255,255,0.9), transparent);
+  }
+
+  .nav-scroll-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(255,255,255,0.9), transparent);
+  }
+
+  .nav-scroll-wrapper.has-scroll::before,
+  .nav-scroll-wrapper.has-scroll::after {
+    opacity: 1;
+  }
 }
 
-/* Classes utilitaires pour supprimer les conflits Tailwind */
+/* Classes utilitaires pour supprimer les conflits */
 @layer components {
   .no-after::after {
     display: none !important;
@@ -210,5 +284,23 @@
   .no-before::before {
     display: none !important;
     content: none !important;
+  }
+
+  .force-nowrap {
+    white-space: nowrap !important;
+    hyphens: none !important;
+    word-break: keep-all !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Classe utilitaire pour le scroll snap */
+  .scroll-snap-x {
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroll-snap-center {
+    scroll-snap-align: center;
   }
 }
