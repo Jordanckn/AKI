@@ -422,7 +422,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     
                     {item.submenu && showSubmenu === item.name && (
                       <div
-                        className="nav-submenu w-80 bg-white rounded-xl shadow-lg border border-gray-100 
+                        className="nav-submenu bg-white rounded-xl shadow-lg border border-gray-100 
                           overflow-hidden transform opacity-100 scale-100 transition-all duration-200"
                         style={{
                           top: submenuPosition.top,
@@ -443,28 +443,30 @@ export default function Header({ onAuthClick }: HeaderProps) {
                                 focus:ring-blue-500/20 focus:ring-offset-1"
                               role="menuitem"
                             >
-                              <div className="flex justify-between items-start">
-                                <div>
-                                  <span className="font-medium text-gray-900 block group-hover:text-blue-600
+                              <div className="submenu-item-container">
+                                <div className="submenu-item-content">
+                                  <div className="submenu-item-title font-medium text-gray-900 group-hover:text-blue-600
                                     transition-colors duration-200">
                                     {subItem.name}
                                     {subItem.popular && (
                                       <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                                        font-medium bg-blue-100 text-blue-800">
+                                        font-medium bg-blue-100 text-blue-800 force-nowrap">
                                         Populaire
                                       </span>
                                     )}
                                     {subItem.recommended && (
                                       <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                                        font-medium bg-green-100 text-green-800">
+                                        font-medium bg-green-100 text-green-800 force-nowrap">
                                         Recommandé
                                       </span>
                                     )}
-                                  </span>
-                                  <span className="text-sm text-gray-500 block">{subItem.description}</span>
+                                  </div>
+                                  <div className="submenu-item-description text-sm text-gray-500 mt-1">{subItem.description}</div>
                                 </div>
                                 {subItem.price && (
-                                  <span className="text-sm font-medium text-blue-600 flex-shrink-0">{subItem.price}</span>
+                                  <div className="submenu-item-price-section">
+                                    <span className="submenu-item-price text-sm font-medium text-blue-600">{subItem.price}</span>
+                                  </div>
                                 )}
                               </div>
                             </button>
