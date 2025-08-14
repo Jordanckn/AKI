@@ -248,6 +248,57 @@
     /* Le positionnement sera calculé via JavaScript */
   }
 
+  /* Protection nowrap pour tous les éléments de sous-menus */
+  .nav-submenu .submenu-item-title {
+    white-space: nowrap;
+    hyphens: none;
+    word-break: keep-all;
+  }
+
+  .nav-submenu .submenu-item-description {
+    white-space: normal; /* Permettre le retour à la ligne pour les descriptions */
+    hyphens: none;
+    word-break: break-word;
+    line-height: 1.4;
+    max-width: 240px; /* Largeur généreuse pour la description */
+  }
+
+  .nav-submenu .submenu-item-price {
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  /* Largeur plus généreuse pour les sous-menus */
+  .nav-submenu {
+    position: fixed;
+    z-index: 1000;
+    min-width: 380px; /* Largeur plus généreuse */
+    max-width: 420px; /* Largeur maximale étendue */
+  }
+
+  /* Container pour bien organiser le layout */
+  .nav-submenu .submenu-item-container {
+    white-space: normal;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  /* Section de contenu (titre + description) */
+  .nav-submenu .submenu-item-content {
+    flex: 1;
+    min-width: 0; /* Permettre la réduction si nécessaire */
+  }
+
+  /* Section prix */
+  .nav-submenu .submenu-item-price-section {
+    flex-shrink: 0;
+    text-align: right;
+  }
+
   /* Liens de navigation */
   .nav-link {
     position: relative;
