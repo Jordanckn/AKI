@@ -290,83 +290,6 @@ export default function Header({ onAuthClick }: HeaderProps) {
               />
               
               {navigation.map((item) => (
-              <React.Fragment key={item.name}>
-                {item.name === 'Formation' ? (
-                  <button
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
-                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
-                      animate-fade-in-up w-full text-left"
-                    onClick={(e) => handleKnowledgeClick(item, e)}
-                    aria-expanded={showSubmenu === item.name}
-                    aria-haspopup="true"
-                  >
-                    {item.name}
-                  </button>
-                ) : item.submenu ? (
-                  <button
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
-                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
-                      animate-fade-in-up w-full text-left"
-                    onClick={() => setShowSubmenu(showSubmenu === item.name ? null : item.name)}
-                    aria-expanded={showSubmenu === item.name}
-                    aria-haspopup="true"
-                  >
-                    {item.name}
-                  </button>
-                ) : (
-                  <Link
-                    to={item.href}
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
-                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
-                      animate-fade-in-up"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                )}
-                {item.submenu && showSubmenu === item.name && (
-                  <div className="pl-4 space-y-1" role="menu">
-                    {item.submenu.map((subItem) => (
-                      <button
-                        key={subItem.name}
-                        onClick={() => handleSubmenuClick(subItem.href)}
-                        className="w-full text-left text-gray-600 block px-3 py-2 text-sm 
-                          font-medium transition-all duration-200 hover:bg-gray-50/80 
-                          hover:translate-x-1 rounded-lg focus:outline-none focus:ring-2 
-                          focus:ring-blue-500/20 focus:ring-offset-1"
-                        role="menuitem"
-                      >
-                        <div className="flex justify-between items-center">
-                          <span>{subItem.name}</span>
-                          {subItem.price && (
-                            <span className="text-blue-600 font-medium">{subItem.price}</span>
-                          )}
-                        </div>
-                        <span className="text-xs text-gray-500">{subItem.description}</span>
-                        {subItem.popular && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                            font-medium bg-blue-100 text-blue-800">
-                            Populaire
-                          </span>
-                        )}
-                        {subItem.recommended && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                            font-medium bg-green-100 text-green-800">
-                            Recommandé
-                          </span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </nav>
-    </header>
-  );
-}item) => (
                 <div 
                   key={item.name}
                   className="nav-item relative group"
@@ -541,7 +464,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
           </div>
         </div>
 
-        {/* Menu mobile - inchangé */}
+        {/* Menu mobile */}
         <div
           className={`xl:hidden transition-all duration-300 ease-in-out ${
             isOpen
@@ -610,4 +533,81 @@ export default function Header({ onAuthClick }: HeaderProps) {
               </Link>
             )}
 
-            {navigation.map((
+            {navigation.map((item) => (
+              <React.Fragment key={item.name}>
+                {item.name === 'Formation' ? (
+                  <button
+                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
+                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
+                      animate-fade-in-up w-full text-left"
+                    onClick={(e) => handleKnowledgeClick(item, e)}
+                    aria-expanded={showSubmenu === item.name}
+                    aria-haspopup="true"
+                  >
+                    {item.name}
+                  </button>
+                ) : item.submenu ? (
+                  <button
+                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
+                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
+                      animate-fade-in-up w-full text-left"
+                    onClick={() => setShowSubmenu(showSubmenu === item.name ? null : item.name)}
+                    aria-expanded={showSubmenu === item.name}
+                    aria-haspopup="true"
+                  >
+                    {item.name}
+                  </button>
+                ) : (
+                  <Link
+                    to={item.href}
+                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
+                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
+                      animate-fade-in-up"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )}
+                {item.submenu && showSubmenu === item.name && (
+                  <div className="pl-4 space-y-1" role="menu">
+                    {item.submenu.map((subItem) => (
+                      <button
+                        key={subItem.name}
+                        onClick={() => handleSubmenuClick(subItem.href)}
+                        className="w-full text-left text-gray-600 block px-3 py-2 text-sm 
+                          font-medium transition-all duration-200 hover:bg-gray-50/80 
+                          hover:translate-x-1 rounded-lg focus:outline-none focus:ring-2 
+                          focus:ring-blue-500/20 focus:ring-offset-1"
+                        role="menuitem"
+                      >
+                        <div className="flex justify-between items-center">
+                          <span>{subItem.name}</span>
+                          {subItem.price && (
+                            <span className="text-blue-600 font-medium">{subItem.price}</span>
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-500">{subItem.description}</span>
+                        {subItem.popular && (
+                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                            font-medium bg-blue-100 text-blue-800">
+                            Populaire
+                          </span>
+                        )}
+                        {subItem.recommended && (
+                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
+                            font-medium bg-green-100 text-green-800">
+                            Recommandé
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+      </nav>
+    </header>
+  );
+}
