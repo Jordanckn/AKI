@@ -125,9 +125,9 @@ export default function Header({ onAuthClick }: HeaderProps) {
     };
   }, []);
 
-  // Handle indicator positioning
+  // Handle indicator positioning - Version finale
   const updateIndicator = (element: HTMLElement | null) => {
-    if (!element || !navContainerRef.current) {
+    if (!element || !navContainerRef.current || isMobile) {
       setActiveIndicator({ width: 0, left: 0, visible: false });
       return;
     }
@@ -143,7 +143,9 @@ export default function Header({ onAuthClick }: HeaderProps) {
   };
 
   const hideIndicator = () => {
-    setActiveIndicator(prev => ({ ...prev, visible: false }));
+    if (!isMobile) {
+      setActiveIndicator(prev => ({ ...prev, visible: false }));
+    }
   };
 
   const getSearchResults = (query: string) => {
@@ -201,23 +203,41 @@ export default function Header({ onAuthClick }: HeaderProps) {
     }
   };
 
-  const handleMouseEnter = (name: string) => {
+  // Gestion des sous-menus et indicateur
+  const handleMouseEnter = (name: string, element: HTMLElement) => {
+    if (isMobile) return;
+    
     if (submenuTimeout) {
       clearTimeout(submenuTimeout);
       setSubmenuTimeout(null);
     }
     setShowSubmenu(name);
+    updateIndicator(element);
   };
 
   const handleMouseLeave = () => {
+    if (isMobile) return;
+    
     const timeout = setTimeout(() => {
       setShowSubmenu(null);
+      hideIndicator();
     }, 300);
     setSubmenuTimeout(timeout);
   };
 
+  const handleNavItemMouseEnter = (element: HTMLElement) => {
+    if (!isMobile && !showSubmenu) {
+      updateIndicator(element);
+    }
+  };
+
+  const handleNavItemMouseLeave = () => {
+    if (!isMobile && !showSubmenu) {
+      hideIndicator();
+    }
+  };
+
   const handleKnowledgeClick = (item: any, e: React.MouseEvent) => {
-    // If user is not authenticated or doesn't have access, show modal
     if (isMobile && item.submenu) {
       e.preventDefault();
       if (!knowledgeClicked) {
@@ -257,34 +277,34 @@ export default function Header({ onAuthClick }: HeaderProps) {
             <div 
               ref={navContainerRef}
               className="nav-container flex items-center space-x-4 2xl:space-x-6"
+              style={{
+                '--indicator-left': `${activeIndicator.left}px`
+              } as React.CSSProperties}
             >
-              {/* Unified indicator */}
+              {/* Indicateur unifié */}
               <div 
                 className={`nav-indicator ${activeIndicator.visible ? 'active' : ''}`}
                 style={{
                   width: `${activeIndicator.width}px`,
-                  transform: `translateX(${activeIndicator.left}px)`
                 }}
               />
               
               {navigation.map((item) => (
                 <div 
                   key={item.name}
-                  className="relative group"
-                  onMouseEnter={() => !isMobile && handleMouseEnter(item.name)}
-                  onMouseLeave={!isMobile ? handleMouseLeave : undefined}
+                  className="nav-item relative group"
+                  onMouseEnter={() => item.submenu && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
+                  onMouseLeave={item.submenu ? handleMouseLeave : undefined}
                 >
                   {item.name === 'Formation' ? (
                     <Link
                       to={item.href}
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 hover:-translate-y-0.5 relative after:absolute 
-                        after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 
-                        after:scale-x-0 hover:after:scale-x-100 after:transition-transform
-                        flex items-center"
+                      data-nav-item={item.name}
+                      className="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
+                        transition-all duration-300 no-after"
                       onClick={(e) => handleKnowledgeClick(item, e)}
-                      onMouseEnter={(e) => updateIndicator(e.currentTarget)}
-                      onMouseLeave={hideIndicator}
+                      onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                      onMouseLeave={handleNavItemMouseLeave}
                     >
                       {item.name}
                       {item.submenu && (
@@ -295,15 +315,13 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     </Link>
                   ) : item.submenu ? (
                     <button
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 hover:-translate-y-0.5 relative after:absolute 
-                        after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 
-                        after:scale-x-0 hover:after:scale-x-100 after:transition-transform
-                        flex items-center"
+                      data-nav-item={item.name}
+                      className="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
+                        transition-all duration-300 no-after"
                       aria-expanded={showSubmenu === item.name}
                       aria-haspopup="true"
-                      onMouseEnter={(e) => updateIndicator(e.currentTarget)}
-                      onMouseLeave={hideIndicator}
+                      onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                      onMouseLeave={handleNavItemMouseLeave}
                     >
                       {item.name}
                       <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -313,12 +331,11 @@ export default function Header({ onAuthClick }: HeaderProps) {
                   ) : (
                     <Link
                       to={item.href}
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
-                        transition-all duration-300 hover:-translate-y-0.5 relative after:absolute 
-                      onMouseEnter={(e) => updateIndicator(e.currentTarget)}
-                      onMouseLeave={hideIndicator}
-                        after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 
-                        after:scale-x-0 hover:after:scale-x-100 after:transition-transform"
+                      data-nav-item={item.name}
+                      className="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium 
+                        transition-all duration-300 no-after"
+                      onMouseEnter={(e) => handleNavItemMouseEnter(e.currentTarget)}
+                      onMouseLeave={handleNavItemMouseLeave}
                     >
                       {item.name}
                     </Link>
@@ -328,7 +345,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     <div
                       className="absolute left-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 
                         overflow-hidden z-50 transform opacity-100 scale-100 transition-all duration-200"
-                      onMouseEnter={() => !isMobile && handleMouseEnter(item.name)}
+                      onMouseEnter={() => !isMobile && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
                       onMouseLeave={!isMobile ? handleMouseLeave : undefined}
                       role="menu"
                     >
@@ -398,7 +415,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
               </form>
 
               {showResults && searchQuery && (
-                <div className="absolute mt-2 w-64 bg-white rounded-xl shadow-soft border 
+                <div className="absolute mt-2 w-64 bg-white rounded-xl shadow-lg border 
                   border-gray-100 overflow-hidden z-50 animate-fade-in-up" role="listbox">
                   {getSearchResults(searchQuery).length > 0 ? (
                     <ul>
@@ -447,6 +464,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
           </div>
         </div>
 
+        {/* Menu mobile - inchangé */}
         <div
           className={`xl:hidden transition-all duration-300 ease-in-out ${
             isOpen
@@ -474,7 +492,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
             </form>
 
             {showResults && searchQuery && (
-              <div className="mb-4 bg-white rounded-xl shadow-soft border border-gray-100 
+              <div className="mb-4 bg-white rounded-xl shadow-lg border border-gray-100 
                 overflow-hidden animate-fade-in-up" role="listbox">
                 {getSearchResults(searchQuery).length > 0 ? (
                   <ul>
@@ -515,81 +533,4 @@ export default function Header({ onAuthClick }: HeaderProps) {
               </Link>
             )}
 
-            {navigation.map((item) => (
-              <React.Fragment key={item.name}>
-                {item.name === 'Formation' ? (
-                  <button
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
-                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
-                      animate-fade-in-up w-full text-left"
-                    onClick={(e) => handleKnowledgeClick(item, e)}
-                    aria-expanded={showSubmenu === item.name}
-                    aria-haspopup="true"
-                  >
-                    {item.name}
-                  </button>
-                ) : item.submenu ? (
-                  <button
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
-                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
-                      animate-fade-in-up w-full text-left"
-                    onClick={() => setShowSubmenu(showSubmenu === item.name ? null : item.name)}
-                    aria-expanded={showSubmenu === item.name}
-                    aria-haspopup="true"
-                  >
-                    {item.name}
-                  </button>
-                ) : (
-                  <Link
-                    to={item.href}
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base 
-                      font-medium transition-all duration-200 hover:bg-gray-50 rounded-lg 
-                      animate-fade-in-up"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                )}
-                {item.submenu && showSubmenu === item.name && (
-                  <div className="pl-4 space-y-1" role="menu">
-                    {item.submenu.map((subItem) => (
-                      <button
-                        key={subItem.name}
-                        onClick={() => handleSubmenuClick(subItem.href)}
-                        className="w-full text-left text-gray-600 block px-3 py-2 text-sm 
-                          font-medium transition-all duration-200 hover:bg-gray-50/80 
-                          hover:translate-x-1 rounded-lg focus:outline-none focus:ring-2 
-                          focus:ring-blue-500/20 focus:ring-offset-1"
-                        role="menuitem"
-                      >
-                        <div className="flex justify-between items-center">
-                          <span>{subItem.name}</span>
-                          {subItem.price && (
-                            <span className="text-blue-600 font-medium">{subItem.price}</span>
-                          )}
-                        </div>
-                        <span className="text-xs text-gray-500">{subItem.description}</span>
-                        {subItem.popular && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                            font-medium bg-blue-100 text-blue-800">
-                            Populaire
-                          </span>
-                        )}
-                        {subItem.recommended && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
-                            font-medium bg-green-100 text-green-800">
-                            Recommandé
-                          </span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </nav>
-    </header>
-  );
-}
+            {navigation.map((
