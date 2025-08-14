@@ -132,17 +132,18 @@ export default function Header({ onAuthClick }: HeaderProps) {
 
   // Vérifier si le scroll est nécessaire
   const checkScrollable = () => {
-    if (navContainerRef.current && !isMobile) {
+    if (navWrapperRef.current && !isMobile) {
+      const wrapper = navWrapperRef.current;
       const container = navContainerRef.current;
-      const hasScrollableContent = container.scrollWidth > container.clientWidth;
-      setHasScroll(hasScrollableContent);
-      
-      // Ajouter/retirer la classe pour les indicateurs visuels
-      if (navWrapperRef.current) {
+      if (container) {
+        const hasScrollableContent = container.scrollWidth > wrapper.clientWidth;
+        setHasScroll(hasScrollableContent);
+        
+        // Ajouter/retirer la classe pour les indicateurs visuels
         if (hasScrollableContent) {
-          navWrapperRef.current.classList.add('has-scroll');
+          wrapper.classList.add('has-scroll');
         } else {
-          navWrapperRef.current.classList.remove('has-scroll');
+          wrapper.classList.remove('has-scroll');
         }
       }
     }
@@ -150,7 +151,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
 
   // Handle indicator positioning - Version améliorée pour le scroll
   const updateIndicator = (element: HTMLElement | null) => {
-    if (!element || !navContainerRef.current || isMobile) {
+    if (!element || !navContainerRef.current || !navWrapperRef.current || isMobile) {
       setActiveIndicator({ width: 0, left: 0, visible: false });
       return;
     }
@@ -159,7 +160,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
     const elementRect = element.getBoundingClientRect();
     
     // Calculer la position relative au conteneur (en tenant compte du scroll)
-    const scrollLeft = navContainerRef.current.scrollLeft;
+    const scrollLeft = navWrapperRef.current.scrollLeft;
     const elementLeft = elementRect.left - containerRect.left + scrollLeft;
     
     setActiveIndicator({
@@ -170,14 +171,14 @@ export default function Header({ onAuthClick }: HeaderProps) {
 
     // Auto-scroll vers l'élément actif si nécessaire
     if (hasScroll) {
-      const containerWidth = navContainerRef.current.clientWidth;
+      const wrapperWidth = navWrapperRef.current.clientWidth;
       const elementCenter = elementLeft + elementRect.width / 2;
-      const containerCenter = containerWidth / 2;
+      const wrapperCenter = wrapperWidth / 2;
       
-      if (elementCenter < scrollLeft + containerCenter - 100 || 
-          elementCenter > scrollLeft + containerCenter + 100) {
-        navContainerRef.current.scrollTo({
-          left: elementCenter - containerCenter,
+      if (elementCenter < scrollLeft + wrapperCenter - 100 || 
+          elementCenter > scrollLeft + wrapperCenter + 100) {
+        navWrapperRef.current.scrollTo({
+          left: elementCenter - wrapperCenter,
           behavior: 'smooth'
         });
       }
@@ -329,6 +330,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
             <div 
               ref={navWrapperRef}
               className="nav-scroll-wrapper relative flex-1 max-w-2xl"
+              onScroll={checkScrollable}
             >
               <div 
                 ref={navContainerRef}
@@ -336,7 +338,6 @@ export default function Header({ onAuthClick }: HeaderProps) {
                 style={{
                   '--indicator-left': `${activeIndicator.left}px`
                 } as React.CSSProperties}
-                onScroll={checkScrollable}
               >
                 {/* Indicateur unifié */}
                 <div 
@@ -402,7 +403,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     
                     {item.submenu && showSubmenu === item.name && (
                       <div
-                        className="absolute left-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 
+                        className="nav-submenu w-80 bg-white rounded-xl shadow-lg border border-gray-100 
                           overflow-hidden z-50 transform opacity-100 scale-100 transition-all duration-200"
                         onMouseEnter={() => !isMobile && handleMouseEnter(item.name, document.querySelector(`[data-nav-item="${item.name}"]`) as HTMLElement)}
                         onMouseLeave={!isMobile ? handleMouseLeave : undefined}
