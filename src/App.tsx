@@ -17,6 +17,7 @@ import OrganizationSchema from './components/OrganizationSchema';
 import WebsiteSchema from './components/WebsiteSchema';
 import Breadcrumb from './components/Breadcrumb';
 import SEOHead from './components/SEOHead';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy load pages
 const Market = lazy(() => import('./pages/Market'));
@@ -107,14 +108,15 @@ function App() {
   return (
     <HelmetProvider>
       <Router>
-        <WebsiteSchema />
-        <ScrollToTop />
-        <div className="min-h-screen bg-white flex flex-col">
-          <Header onAuthClick={() => handleAuthClick(false)} />
-          <main className="flex-1 pb-16">
-            <Breadcrumb />
-            <Suspense fallback={<LoadingSpinner />}>
-              <Routes>
+        <ErrorBoundary>
+          <WebsiteSchema />
+          <ScrollToTop />
+          <div className="min-h-screen bg-white flex flex-col">
+            <Header onAuthClick={() => handleAuthClick(false)} />
+            <main className="flex-1 pb-16">
+              <Breadcrumb />
+              <Suspense fallback={<LoadingSpinner />}>
+                <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/marche-cryptomonnaies-temps-reel" element={<Market />} />
                 <Route path="/about" element={<About />} />
@@ -352,25 +354,26 @@ function App() {
                 <Route path="/market" element={<Market />} />
                 <Route path="/dictionary" element={<Dictionary />} />
                 <Route path="/dictionary/:slug" element={<DictionaryTerm />} />
-              </Routes>
-            </Suspense>
-          </main>
-          <Footer />
-          <CookieConsent />
+                </Routes>
+              </Suspense>
+            </main>
+            <Footer />
+            <CookieConsent />
 
-          <Modal
-            isOpen={showAuthModal}
-            onClose={() => setShowAuthModal(false)}
-            title={isSignUp ? 'Inscription' : 'Connexion'}
-            subtitle={isSignUp ? 'Créez votre compte' : 'Connectez-vous à votre compte'}
-          >
-            <AuthModalContent
-              isSignUp={isSignUp}
-              setIsSignUp={setIsSignUp}
+            <Modal
+              isOpen={showAuthModal}
               onClose={() => setShowAuthModal(false)}
-            />
-          </Modal>
-        </div>
+              title={isSignUp ? 'Inscription' : 'Connexion'}
+              subtitle={isSignUp ? 'Créez votre compte' : 'Connectez-vous à votre compte'}
+            >
+              <AuthModalContent
+                isSignUp={isSignUp}
+                setIsSignUp={setIsSignUp}
+                onClose={() => setShowAuthModal(false)}
+              />
+            </Modal>
+          </div>
+        </ErrorBoundary>
       </Router>
     </HelmetProvider>
   );
