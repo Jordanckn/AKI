@@ -11,7 +11,7 @@
   to = "/index.html"
   status = 200
 
-# Redirections SEO (depuis _redirects mais en format netlify.toml)
+# Redirections SEO
 [[redirects]]
   from = "/market"
   to = "/marche-cryptomonnaies-temps-reel"
@@ -157,7 +157,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
-# Headers spécifiques pour les articles (optimisation partage social)
+# Headers spécifiques pour les articles
 [[headers]]
   for = "/articles/*"
   [headers.values]
@@ -166,7 +166,7 @@
     X-Frame-Options = "SAMEORIGIN"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Headers pour les images (optimisation partage social)
+# Headers pour les images
 [[headers]]
   for = "*.jpg"
   [headers.values]
