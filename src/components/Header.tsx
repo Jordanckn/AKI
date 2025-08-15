@@ -1,87 +1,90 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Search } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
 import AuthButton from './AuthButton';
 import { supabase } from '../lib/supabaseClient';
 import SubscriptionStatus from './SubscriptionStatus';
+import LanguageToggle from './LanguageToggle';
 
 interface HeaderProps {
   onAuthClick: () => void;
 }
 
-const navigation = [
-  { name: 'Accueil', href: '/' },
-  {
-    name: 'Nos solutions',
-    href: '#',
-    submenu: [
-      {
-        name: 'Formation seule',
-        description: 'Accès complet à la formation crypto',
-        price: '249,99€/mois',
-        href: '/solutions/formation-cryptomonnaie/tarification',
-        popular: false
-      },
-      {
-        name: 'Formation + Signaux',
-        description: 'Formation complète et signaux de trading',
-        price: '349,99€/mois',
-        popular: true,
-        href: '/solutions/formation-cryptomonnaie/tarification'
-      }
-    ]
-  },
-  {
-    name: 'Signaux Trading',
-    href: '/signaux-trading'
-  },
-  {
-    name: 'Formation',
-    href: '/comprendre-les-cryptomonnaies',
-    submenu: [
-      {
-        name: 'Comprendre la crypto',
-        description: 'Guide complet sur la blockchain et les cryptomonnaies',
-        href: '/formation/comprendre-la-crypto'
-      },
-      {
-        name: 'Marché en temps réel',
-        description: 'Suivez les cours des cryptomonnaies en direct',
-        href: '/marche-cryptomonnaies-temps-reel'
-      },
-      {
-        name: 'Articles',
-        description: 'Nos derniers articles et analyses',
-        href: '/articles'
-      },
-      {
-        name: 'Dictionnaire crypto',
-        description: 'Définitions des termes crypto essentiels',
-        href: '/dictionnaire-crypto'
-      }
-    ]
-  },
-  { name: 'À propos', href: '/about' },
-  { name: 'Prendre rendez-vous', href: '/appointment' },
-];
-
-const searchableItems = [
-  { title: 'Formation seule - 249,99€/mois', path: '/solutions/formation-cryptomonnaie/tarification', keywords: ['abonnement', 'mensuel', '249', 'formation'] },
-  { title: 'Formation + Signaux - 349,99€/mois', path: '/solutions/formation-cryptomonnaie/tarification', keywords: ['abonnement', 'signaux', '349', 'populaire'] },
-  { title: 'Signaux Trading', path: '/signaux-trading', keywords: ['signaux', 'trading', 'automatique', 'webhook'] },
-  { title: 'Marché en temps réel', path: '/marche-cryptomonnaies-temps-reel', keywords: ['marche', 'prix', 'cours', 'crypto', 'bitcoin', 'ethereum'] },
-  { title: 'Comprendre la crypto', path: '/formation/comprendre-la-crypto', keywords: ['comprendre', 'crypto', 'blockchain', 'education'] },
-  { title: 'Formation Crypto', path: '/comprendre-les-cryptomonnaies', keywords: ['knowledge', 'apprentissage', 'formation', 'education'] },
-  { title: 'Dictionnaire Crypto', path: '/dictionnaire-crypto', keywords: ['dictionnaire', 'lexique', 'glossaire', 'termes', 'définitions'] },
-  { title: 'À propos', path: '/about', keywords: ['about', 'propos', 'entreprise', 'histoire'] },
-  { title: 'Notre équipe', path: '/team', keywords: ['equipe', 'team', 'jordan', 'chekroun'] },
-  { title: 'Assistance', path: '/support', keywords: ['support', 'aide', 'contact', 'assistance'] },
-  { title: 'Prendre rendez-vous', path: '/appointment', keywords: ['rendez-vous', 'appointment', 'consultation'] },
-  { title: 'Tableau de bord', path: '/dashboard', keywords: ['dashboard', 'tableau', 'bord', 'compte', 'profil'] },
-];
-
 export default function Header({ onAuthClick }: HeaderProps) {
+  const { t } = useTranslation();
+  
+  const navigation = [
+    { name: t('nav.home'), href: '/' },
+    {
+      name: t('nav.solutions'),
+      href: '#',
+      submenu: [
+        {
+          name: t('nav.trainingOnly'),
+          description: t('nav.trainingOnlyDesc'),
+          price: t('nav.trainingOnlyPrice'),
+          href: '/solutions/formation-cryptomonnaie/tarification',
+          popular: false
+        },
+        {
+          name: t('nav.trainingSignals'),
+          description: t('nav.trainingSignalsDesc'),
+          price: t('nav.trainingSignalsPrice'),
+          popular: true,
+          href: '/solutions/formation-cryptomonnaie/tarification'
+        }
+      ]
+    },
+    {
+      name: t('nav.tradingSignals'),
+      href: '/signaux-trading'
+    },
+    {
+      name: t('nav.training'),
+      href: '/comprendre-les-cryptomonnaies',
+      submenu: [
+        {
+          name: t('nav.understandCrypto'),
+          description: t('nav.understandCryptoDesc'),
+          href: '/formation/comprendre-la-crypto'
+        },
+        {
+          name: t('nav.realTimeMarket'),
+          description: t('nav.realTimeMarketDesc'),
+          href: '/marche-cryptomonnaies-temps-reel'
+        },
+        {
+          name: t('nav.articles'),
+          description: t('nav.articlesDesc'),
+          href: '/articles'
+        },
+        {
+          name: t('nav.cryptoDictionary'),
+          description: t('nav.cryptoDictionaryDesc'),
+          href: '/dictionnaire-crypto'
+        }
+      ]
+    },
+    { name: t('nav.about'), href: '/about' },
+    { name: t('nav.appointment'), href: '/appointment' },
+  ];
+
+  const searchableItems = [
+    { title: `${t('nav.trainingOnly')} - ${t('nav.trainingOnlyPrice')}`, path: '/solutions/formation-cryptomonnaie/tarification', keywords: ['abonnement', 'mensuel', '249', 'formation', 'subscription', 'monthly', 'training'] },
+    { title: `${t('nav.trainingSignals')} - ${t('nav.trainingSignalsPrice')}`, path: '/solutions/formation-cryptomonnaie/tarification', keywords: ['abonnement', 'signaux', '349', 'populaire', 'subscription', 'signals', 'popular'] },
+    { title: t('nav.tradingSignals'), path: '/signaux-trading', keywords: ['signaux', 'trading', 'automatique', 'webhook', 'signals', 'automatic'] },
+    { title: t('nav.realTimeMarket'), path: '/marche-cryptomonnaies-temps-reel', keywords: ['marche', 'prix', 'cours', 'crypto', 'bitcoin', 'ethereum', 'market', 'price', 'real-time'] },
+    { title: t('nav.understandCrypto'), path: '/formation/comprendre-la-crypto', keywords: ['comprendre', 'crypto', 'blockchain', 'education', 'understand', 'training'] },
+    { title: t('nav.training'), path: '/comprendre-les-cryptomonnaies', keywords: ['knowledge', 'apprentissage', 'formation', 'education', 'learning', 'training'] },
+    { title: t('nav.cryptoDictionary'), path: '/dictionnaire-crypto', keywords: ['dictionnaire', 'lexique', 'glossaire', 'termes', 'définitions', 'dictionary', 'terms', 'definitions'] },
+    { title: t('nav.about'), path: '/about', keywords: ['about', 'propos', 'entreprise', 'histoire', 'company', 'history'] },
+    { title: 'Notre équipe', path: '/team', keywords: ['equipe', 'team', 'jordan', 'chekroun'] },
+    { title: t('footer.assistance'), path: '/support', keywords: ['support', 'aide', 'contact', 'assistance', 'help'] },
+    { title: t('nav.appointment'), path: '/appointment', keywords: ['rendez-vous', 'appointment', 'consultation', 'meeting'] },
+    { title: t('nav.dashboard'), path: '/dashboard', keywords: ['dashboard', 'tableau', 'bord', 'compte', 'profil', 'account', 'profile'] },
+  ];
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
@@ -453,13 +456,13 @@ export default function Header({ onAuthClick }: HeaderProps) {
                                     {subItem.popular && (
                                       <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
                                         font-medium bg-blue-100 text-blue-800 force-nowrap">
-                                        Populaire
+{t('nav.popular')}
                                       </span>
                                     )}
                                     {subItem.recommended && (
                                       <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs 
                                         font-medium bg-green-100 text-green-800 force-nowrap">
-                                        Recommandé
+{t('nav.recommended')}
                                       </span>
                                     )}
                                   </div>
@@ -492,11 +495,11 @@ export default function Header({ onAuthClick }: HeaderProps) {
                   }}
                   onFocus={handleSearchFocus}
                   onBlur={handleSearchBlur}
-                  placeholder="Rechercher..."
+                  placeholder={t('nav.search')}
                   className="w-48 px-4 py-2 pl-10 pr-4 rounded-full bg-gray-100 focus:bg-white 
                     border-2 border-transparent focus:border-blue-500 outline-none transition-all 
                     duration-300 group-hover:bg-gray-50"
-                  aria-label="Rechercher sur le site"
+                  aria-label={t('nav.search')}
                 />
                 <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 
                   transition-colors group-hover:text-gray-600" aria-hidden="true" />
@@ -523,26 +526,28 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     </ul>
                   ) : (
                     <div className="px-4 py-3 text-sm text-gray-500">
-                      Aucun résultat trouvé
+                      {t('nav.noResults')}
                     </div>
                   )}
                 </div>
               )}
             </div>
 
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 flex items-center space-x-3">
+              <LanguageToggle />
               <AuthButton onClick={onAuthClick} />
             </div>
           </div>
 
           <div className="xl:hidden flex items-center space-x-4">
+            <LanguageToggle />
             <AuthButton onClick={onAuthClick} />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 
                 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                 transition-colors duration-200"
-              aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-label={isOpen ? t('nav.closeMenu') : t('nav.openMenu')}
               aria-expanded={isOpen}
             >
               {isOpen ? (
@@ -573,10 +578,10 @@ export default function Header({ onAuthClick }: HeaderProps) {
                 }}
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
-                placeholder="Rechercher..."
+                placeholder={t('nav.search')}
                 className="w-full px-4 py-2 pl-10 pr-4 rounded-full bg-gray-100 focus:bg-white 
                   border-2 border-transparent focus:border-blue-500 outline-none transition-all"
-                aria-label="Rechercher sur le site"
+                aria-label={t('nav.search')}
               />
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" aria-hidden="true" />
             </form>
@@ -605,7 +610,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                   </ul>
                 ) : (
                   <div className="px-4 py-3 text-sm text-gray-500">
-                    Aucun résultat trouvé
+                    {t('nav.noResults')}
                   </div>
                 )}
               </div>
@@ -619,7 +624,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                   animate-fade-in-up"
                 onClick={() => setIsOpen(false)}
               >
-                Tableau de bord
+{t('nav.dashboard')}
               </Link>
             )}
 
@@ -680,13 +685,13 @@ export default function Header({ onAuthClick }: HeaderProps) {
                         {subItem.popular && (
                           <span className="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs 
                             font-medium bg-blue-100 text-blue-800">
-                            Populaire
+{t('nav.popular')}
                           </span>
                         )}
                         {subItem.recommended && (
                           <span className="mt-1 inline-flex items-center px-2 py-0.5 rounded text-xs 
                             font-medium bg-green-100 text-green-800">
-                            Recommandé
+{t('nav.recommended')}
                           </span>
                         )}
                       </button>

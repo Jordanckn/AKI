@@ -2,11 +2,13 @@ import React from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Mission from './Mission';
 import ParticleBackground from './ParticleBackground';
 import iPhone from './iPhone';
 
 export default function Hero() {
+  const { t } = useTranslation();
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 300], [0, 100]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -39,10 +41,10 @@ export default function Hero() {
                   <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold 
                     tracking-tight text-gray-900 animate-fade-in-up"
                   >
-                    Expert en Trading Crypto &
+                    {t('hero.title')}
                     <span className="block bg-gradient-to-r from-pink-600 via-orange-600 to-yellow-600 
                       bg-clip-text text-transparent animate-pulse">
-                      Formation Investissement
+                      {t('hero.titleHighlight')}
                     </span>
                   </h1>
                 </motion.div>
@@ -53,7 +55,7 @@ export default function Hero() {
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="text-xl sm:text-2xl text-gray-500 max-w-3xl mx-auto"
                 >
-                  Optimisez vos investissements en cryptomonnaies avec nos analyses expertes et notre accompagnement personnalisé
+                  {t('hero.subtitle')}
                 </motion.p>
 
                 <motion.div

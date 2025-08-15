@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { X, Youtube, Instagram, Linkedin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { siteConfig } from '../config/siteConfig';
 
 // SVG officiel de Threads par Meta
@@ -81,6 +82,7 @@ const socialLinksConfig = [
 ];
 
 export default function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="bg-white border-t border-gray-100 py-8 mt-auto">
       <div className="container mx-auto px-4">
@@ -90,49 +92,49 @@ export default function Footer() {
             to="/support"
             className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200 px-2 py-1"
           >
-            Assistance
+            {t('footer.assistance')}
           </Link>
           <Link
             to="/values"
             className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200 px-2 py-1"
           >
-            Nos valeurs
+            {t('footer.values')}
           </Link>
           <Link
             to="/faq"
             className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200 px-2 py-1"
           >
-            FAQ
+            {t('footer.faq')}
           </Link>
           <Link
             to="/politique-de-confidentialite"
             className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200 px-2 py-1"
           >
-            Confidentialité
+            {t('footer.privacy')}
           </Link>
           <Link
             to="/conditions-utilisation"
             className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200 px-2 py-1"
           >
-            Conditions d'utilisation
+            {t('footer.terms')}
           </Link>
           <Link
             to="/politique-entreprise"
             className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200 px-2 py-1"
           >
-            Politique d'Entreprise
+            {t('footer.companyPolicy')}
           </Link>
           <Link
             to="/articles"
             className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200 px-2 py-1"
           >
-            Articles
+            {t('footer.articles')}
           </Link>
           <Link
             to="/dictionnaire-crypto"
             className="text-xs text-gray-600 hover:text-blue-600 transition-colors duration-200 px-2 py-1"
           >
-            Dictionnaire
+            {t('footer.dictionary')}
           </Link>
         </div>
 
@@ -142,54 +144,54 @@ export default function Footer() {
             to="/support"
             className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
           >
-            Assistance
+            {t('footer.assistance')}
           </Link>
           <Link
             to="/values"
             className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
           >
-            Nos valeurs
+            {t('footer.values')}
           </Link>
           <Link
             to="/faq"
             className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
           >
-            FAQ
+            {t('footer.faq')}
           </Link>
           <Link
             to="/politique-de-confidentialite"
             className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
           >
-            Politique de Confidentialité
+            {t('footer.privacyPolicy')}
           </Link>
           <Link
             to="/conditions-utilisation"
             className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
           >
-            Conditions d'Utilisation
+            {t('footer.termsOfService')}
           </Link>
           <Link
             to="/politique-entreprise"
             className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
           >
-            Politique d'Entreprise
+            {t('footer.companyPolicy')}
           </Link>
           <Link
             to="/articles"
             className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
           >
-            Articles
+            {t('footer.articles')}
           </Link>
           <Link
             to="/dictionnaire-crypto"
             className="text-gray-600 hover:text-blue-600 transition-colors duration-200"
           >
-            Dictionnaire
+            {t('footer.dictionary')}
           </Link>
         </div>
         
         <div className="text-center text-gray-600 mb-6 text-sm">
-          <p>Copyright © {new Date().getFullYear()} Alyah Knowledge Investissement. Tous droits réservés.</p>
+          <p>{t('footer.copyright', { year: new Date().getFullYear() })}</p>
         </div>
         
         <div className="flex justify-center items-center space-x-6">
