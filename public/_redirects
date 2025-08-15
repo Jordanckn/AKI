@@ -28,4 +28,22 @@
 /dictionary/* /dictionnaire-crypto/:splat 301
 
 # SPA fallback - DOIT être en dernier pour que React Router gère les routes dynamiques
-/* /index.html 200!
+# Exclure les assets statiques du SPA fallback
+/assets/* 404
+/*.js 404
+/*.css 404
+/*.png 404
+/*.jpg 404
+/*.jpeg 404
+/*.gif 404
+/*.svg 404
+/*.webp 404
+/*.ico 404
+/*.woff 404
+/*.woff2 404
+/*.ttf 404
+/*.eot 404
+/*.map 404
+
+# Fallback SPA pour toutes les autres routes
+/* /index.html 200
