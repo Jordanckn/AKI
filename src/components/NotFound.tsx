@@ -2,13 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Search, BookOpen } from 'lucide-react';
 import SEOHead from './SEOHead';
+import { useTranslation } from 'react-i18next';
 
 export default function NotFound() {
+  const { t } = useTranslation();
   return (
     <>
-      <SEOHead 
-        title="Page non trouvée - Alyah Knowledge"
-        description="La page que vous recherchez n'existe pas. Explorez nos ressources crypto et formations."
+      <SEOHead
+        title={t('notFoundPage.seo.title')}
+        description={t('notFoundPage.seo.description')}
         noindex={true}
         path="/404"
       />
@@ -19,10 +21,10 @@ export default function NotFound() {
               <span className="text-4xl font-bold text-blue-600">404</span>
             </div>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Page non trouvée
+              {t('notFoundPage.header.title')}
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              La page que vous recherchez n'existe pas ou a été déplacée.
+              {t('notFoundPage.header.subtitle')}
             </p>
           </div>
           
@@ -32,52 +34,52 @@ export default function NotFound() {
               className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
               <Home className="mr-2 h-5 w-5" />
-              Accueil
+              {t('notFoundPage.buttons.home')}
             </Link>
             <Link
               to="/dictionnaire-crypto"
               className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
               <Search className="mr-2 h-5 w-5" />
-              Dictionnaire
+              {t('notFoundPage.buttons.dictionary')}
             </Link>
             <Link
               to="/articles"
               className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
               <BookOpen className="mr-2 h-5 w-5" />
-              Articles
+              {t('notFoundPage.buttons.articles')}
             </Link>
           </div>
 
           <div className="bg-gray-50 rounded-xl p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-3">
-              Ressources populaires
+              {t('notFoundPage.content.popularResources')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-              <Link 
-                to="/comprendre-les-cryptomonnaies" 
+              <Link
+                to="/comprendre-les-cryptomonnaies"
                 className="text-blue-600 hover:text-blue-800 transition-colors"
               >
-                → Formation crypto complète
+                {t('notFoundPage.content.link1')}
               </Link>
-              <Link 
-                to="/marche-cryptomonnaies-temps-reel" 
+              <Link
+                to="/marche-cryptomonnaies-temps-reel"
                 className="text-blue-600 hover:text-blue-800 transition-colors"
               >
-                → Marché en temps réel
+                {t('notFoundPage.content.link2')}
               </Link>
-              <Link 
-                to="/dictionnaire-crypto/bitcoin" 
+              <Link
+                to="/dictionnaire-crypto/bitcoin"
                 className="text-blue-600 hover:text-blue-800 transition-colors"
               >
-                → Qu'est-ce que Bitcoin ?
+                {t('notFoundPage.content.link3')}
               </Link>
-              <Link 
-                to="/signaux-trading" 
+              <Link
+                to="/signaux-trading"
                 className="text-blue-600 hover:text-blue-800 transition-colors"
               >
-                → Signaux de trading
+                {t('notFoundPage.content.link4')}
               </Link>
             </div>
           </div>

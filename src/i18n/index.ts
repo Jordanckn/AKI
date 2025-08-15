@@ -265,18 +265,89 @@ const resources = {
         dictionary: 'Dictionnaire',
         copyright: 'Copyright © {year} Alyah Knowledge Investissement. Tous droits réservés.'
       },
-      // Messages d'erreur globaux
+      supportPage: {
+        seo: {
+          title: 'Assistance',
+          description: "Contactez l'équipe d'Alyah Knowledge pour toute question ou assistance. Nous sommes là pour vous aider."
+        },
+        header: {
+          title: 'Assistance',
+          subtitle: "Notre équipe est là pour vous aider. Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais."
+        },
+        form: {
+          labels: {
+            name: 'Nom complet',
+            email: 'Email',
+            subject: 'Sujet',
+            message: 'Message'
+          },
+          placeholders: {
+            name: 'Votre nom',
+            email: 'votre@email.com',
+            subject: 'Le sujet de votre message',
+            message: 'Décrivez votre demande en détail...'
+          },
+          emailSubjectPrefix: "Nouvelle demande d'assistance Alyah"
+        },
+        buttons: {
+          submit: 'Envoyer le message',
+          sending: 'Envoi en cours...'
+        },
+        messages: {
+          success: 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
+          error: "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer plus tard."
+        }
+      },
+      notFoundPage: {
+        seo: {
+          title: 'Page non trouvée - Alyah Knowledge',
+          description: "La page que vous recherchez n'existe pas. Explorez nos ressources crypto et formations."
+        },
+        header: {
+          title: 'Page non trouvée',
+          subtitle: "La page que vous recherchez n'existe pas ou a été déplacée."
+        },
+        buttons: {
+          home: 'Accueil',
+          dictionary: 'Dictionnaire',
+          articles: 'Articles'
+        },
+        content: {
+          popularResources: 'Ressources populaires',
+          link1: '→ Formation crypto complète',
+          link2: '→ Marché en temps réel',
+          link3: "→ Qu'est-ce que Bitcoin ?",
+          link4: '→ Signaux de trading'
+        }
+      },
+      errorBoundary: {
+        header: {
+          title: 'Erreur de chargement',
+          subtitle: "Une erreur s'est produite lors du chargement de l'application."
+        },
+        buttons: {
+          reload: 'Recharger la page'
+        },
+        content: {
+          devDetails: "Détails de l'erreur (dev uniquement)"
+        }
+      },
       errors: {
-        generic: 'Une erreur s\'est produite',
-        networkError: 'Erreur de connexion réseau',
-        serverError: 'Erreur du serveur',
-        unauthorized: 'Accès non autorisé',
-        forbidden: 'Accès interdit',
-        notFound: 'Page non trouvée',
-        validation: 'Erreur de validation',
-        tryAgain: 'Veuillez réessayer',
-        goHome: 'Retour à l\'accueil',
-        contactSupport: 'Contacter le support'
+        network: 'Erreur réseau. Veuillez vérifier votre connexion.',
+        unknown: 'Une erreur inconnue est survenue.',
+        unauthorized: 'Vous devez être connecté pour accéder à cette page.',
+        forbidden: "Vous n'avez pas la permission d'accéder à cette ressource.",
+        notFound: 'La ressource demandée est introuvable.',
+        serverError: 'Erreur interne du serveur. Veuillez réessayer plus tard.',
+        timeout: 'La demande a expiré. Veuillez réessayer.',
+        invalidInput: 'Entrée invalide.',
+        emailInUse: 'Cette adresse e-mail est déjà utilisée.',
+        weakPassword: 'Mot de passe trop faible.',
+        tooManyRequests: 'Trop de tentatives. Veuillez réessayer plus tard.',
+        maintenance: 'Le service est actuellement en maintenance.',
+        paymentFailed: 'Le paiement a échoué.',
+        formIncomplete: 'Veuillez remplir tous les champs requis.',
+        subscriptionRequired: 'Un abonnement actif est requis.'
       },
       quizQuestions: {
     question1: {
@@ -1205,18 +1276,89 @@ const resources = {
         dictionary: 'Dictionary',
         copyright: 'Copyright © {year} Alyah Knowledge Investment. All rights reserved.'
       },
-      // Global error messages
+      supportPage: {
+        seo: {
+          title: 'Support',
+          description: "Contact the Alyah Knowledge team for any questions or assistance. We're here to help."
+        },
+        header: {
+          title: 'Support',
+          subtitle: "Our team is here to help. Fill out the form below and we'll respond as soon as possible."
+        },
+        form: {
+          labels: {
+            name: 'Full name',
+            email: 'Email',
+            subject: 'Subject',
+            message: 'Message'
+          },
+          placeholders: {
+            name: 'Your name',
+            email: 'your@email.com',
+            subject: 'The subject of your message',
+            message: 'Describe your request in detail...'
+          },
+          emailSubjectPrefix: 'New Alyah support request'
+        },
+        buttons: {
+          submit: 'Send message',
+          sending: 'Sending...'
+        },
+        messages: {
+          success: 'Your message has been sent successfully. We will respond as soon as possible.',
+          error: 'An error occurred while sending the message. Please try again later.'
+        }
+      },
+      notFoundPage: {
+        seo: {
+          title: 'Page not found - Alyah Knowledge',
+          description: 'The page you are looking for does not exist. Explore our crypto resources and training.'
+        },
+        header: {
+          title: 'Page not found',
+          subtitle: 'The page you are looking for does not exist or has been moved.'
+        },
+        buttons: {
+          home: 'Home',
+          dictionary: 'Dictionary',
+          articles: 'Articles'
+        },
+        content: {
+          popularResources: 'Popular resources',
+          link1: '→ Complete crypto training',
+          link2: '→ Real-time market',
+          link3: '→ What is Bitcoin?',
+          link4: '→ Trading signals'
+        }
+      },
+      errorBoundary: {
+        header: {
+          title: 'Loading error',
+          subtitle: 'An error occurred while loading the application.'
+        },
+        buttons: {
+          reload: 'Reload page'
+        },
+        content: {
+          devDetails: 'Error details (dev only)'
+        }
+      },
       errors: {
-        generic: 'An error occurred',
-        networkError: 'Network connection error',
-        serverError: 'Server error',
-        unauthorized: 'Unauthorized access',
-        forbidden: 'Access forbidden',
-        notFound: 'Page not found',
-        validation: 'Validation error',
-        tryAgain: 'Please try again',
-        goHome: 'Go home',
-        contactSupport: 'Contact support'
+        network: 'Network error. Please check your connection.',
+        unknown: 'An unknown error occurred.',
+        unauthorized: 'You must be logged in to access this page.',
+        forbidden: 'You do not have permission to access this resource.',
+        notFound: 'The requested resource was not found.',
+        serverError: 'Internal server error. Please try again later.',
+        timeout: 'The request timed out. Please try again.',
+        invalidInput: 'Invalid input.',
+        emailInUse: 'This email address is already in use.',
+        weakPassword: 'Password is too weak.',
+        tooManyRequests: 'Too many attempts. Please try again later.',
+        maintenance: 'The service is currently under maintenance.',
+        paymentFailed: 'Payment failed.',
+        formIncomplete: 'Please complete all required fields.',
+        subscriptionRequired: 'An active subscription is required.'
       },
       quizQuestions: {
     question1: {
