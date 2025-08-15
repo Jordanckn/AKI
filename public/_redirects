@@ -28,4 +28,4 @@
 /dictionary/* /dictionnaire-crypto/:splat 301
 
 # SPA fallback - DOIT être en dernier pour que React Router gère les routes dynamiques
-/* /index.html 200
+/* /index.html 200!
