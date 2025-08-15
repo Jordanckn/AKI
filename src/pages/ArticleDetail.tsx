@@ -31,16 +31,6 @@ export default function ArticleDetail() {
     }
     
     fetchArticle();
-    
-    // Timeout pour éviter les loadings infinis
-    const timeout = setTimeout(() => {
-      if (loading) {
-        setError('Délai d\'attente dépassé');
-        setLoading(false);
-      }
-    }, 10000);
-    
-    return () => clearTimeout(timeout);
   }, [slug, navigate]);
 
   const fetchArticle = async () => {

@@ -22,16 +22,6 @@ export default function DictionaryTermPage() {
     }
     
     fetchTerm(slug);
-    
-    // Timeout pour éviter les loadings infinis
-    const timeout = setTimeout(() => {
-      if (loading) {
-        setError('Délai d\'attente dépassé');
-        setLoading(false);
-      }
-    }, 10000);
-    
-    return () => clearTimeout(timeout);
   }, [slug, navigate]);
 
   const fetchTerm = async (termSlug: string) => {
