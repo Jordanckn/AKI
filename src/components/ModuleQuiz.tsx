@@ -6,9 +6,9 @@ import { checkModuleAccess } from '../lib/moduleAccess';
 import { getQuestionsByModule, getModuleSpecificMessages } from '../data/quizQuestions';
 
 interface Question {
-  text: string;
-  options: string[];
-  correctAnswer: number;
+  question: string;
+  options: Record<'a' | 'b' | 'c' | 'd', string>;
+  correctAnswer: string;
   explanation: string;
 }
 
@@ -46,7 +46,7 @@ const moduleIdToUrlMap: Record<string, string> = {
 
 export default function ModuleQuiz({ onComplete, onRetry, onBack, nextModuleId = '', currentModuleId = '' }: ModuleQuizProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [quizComplete, setQuizComplete] = useState(false);
@@ -57,7 +57,7 @@ export default function ModuleQuiz({ onComplete, onRetry, onBack, nextModuleId =
 
   // Get module-specific questions and messages
   const moduleId = currentModuleId || (nextModuleId ? `module-${parseInt(nextModuleId.split('-')[1] || '1') - 1}` : 'module-1');
-  const questions = getQuestionsByModule(moduleId);
+  const questions: Question[] = getQuestionsByModule(moduleId);
   const messages = getModuleSpecificMessages(moduleId);
 
   useEffect(() => {
@@ -217,11 +217,11 @@ export default function ModuleQuiz({ onComplete, onRetry, onBack, nextModuleId =
     }
   };
 
-  const handleAnswerSelect = (answerIndex: number) => {
-    setSelectedAnswer(answerIndex);
+  const handleAnswerSelect = (answerKey: string) => {
+    setSelectedAnswer(answerKey);
     setShowExplanation(true);
 
-    if (answerIndex === questions[currentQuestion].correctAnswer) {
+    if (answerKey === questions[currentQuestion].correctAnswer) {
       setScore(score + 1);
     }
 
@@ -232,7 +232,7 @@ export default function ModuleQuiz({ onComplete, onRetry, onBack, nextModuleId =
         setShowExplanation(false);
       } else {
         setQuizComplete(true);
-        const finalScore = score + (answerIndex === questions[currentQuestion].correctAnswer ? 1 : 0);
+        const finalScore = score + (answerKey === questions[currentQuestion].correctAnswer ? 1 : 0);
         onComplete(finalScore);
       }
     }, 2000);
@@ -312,32 +312,32 @@ export default function ModuleQuiz({ onComplete, onRetry, onBack, nextModuleId =
             </span>
           </div>
           <h3 className="text-lg font-medium text-gray-900">
-            📌 {questions[currentQuestion]?.text}
+            📌 {questions[currentQuestion]?.question}
           </h3>
         </div>
 
         <div className="space-y-3">
-          {questions[currentQuestion]?.options.map((option, index) => (
+          {Object.entries(questions[currentQuestion]?.options || {}).map(([key, option]) => (
             <button
-              key={index}
-              onClick={() => handleAnswerSelect(index)}
+              key={key}
+              onClick={() => handleAnswerSelect(key)}
               disabled={selectedAnswer !== null}
               className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200
                 ${selectedAnswer === null
                   ? 'hover:border-blue-500 border-gray-200'
-                  : index === questions[currentQuestion].correctAnswer
+                  : key === questions[currentQuestion].correctAnswer
                     ? 'border-green-500 bg-green-50'
-                    : selectedAnswer === index
+                    : selectedAnswer === key
                       ? 'border-red-500 bg-red-50'
                       : 'border-gray-200 opacity-50'
                 }`}
             >
               <div className="flex items-center justify-between">
                 <span className="flex-1">{option}</span>
-                {selectedAnswer !== null && index === questions[currentQuestion].correctAnswer && (
+                {selectedAnswer !== null && key === questions[currentQuestion].correctAnswer && (
                   <CheckCircle className="h-5 w-5 text-green-500" />
                 )}
-                {selectedAnswer === index && index !== questions[currentQuestion].correctAnswer && (
+                {selectedAnswer === key && key !== questions[currentQuestion].correctAnswer && (
                   <AlertTriangle className="h-5 w-5 text-red-500" />
                 )}
               </div>
