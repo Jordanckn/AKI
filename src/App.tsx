@@ -64,6 +64,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const Dictionary = lazy(() => import('./pages/Dictionary'));
 const DictionaryTerm = lazy(() => import('./pages/DictionaryTerm'));
+const NotFound = lazy(() => import('./components/NotFound'));
 
 // Loading component
 const LoadingSpinner = () => (
@@ -354,6 +355,9 @@ function App() {
                 <Route path="/market" element={<Market />} />
                 <Route path="/dictionary" element={<Dictionary />} />
                 <Route path="/dictionary/:slug" element={<DictionaryTerm />} />
+                
+                {/* Route 404 - DOIT être en dernier */}
+                <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
             </main>

@@ -49,7 +49,5 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 supabase.auth.getSession().then(({ data, error }) => {
   if (error) {
     console.error('Error connecting to Supabase:', error);
-  } else {
-    console.log('Supabase connection established successfully');
   }
 });

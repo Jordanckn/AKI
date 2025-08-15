@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import SEOHead from '../components/SEOHead';
 import type { DictionaryTerm } from '../types/dictionary';
 import { Helmet } from 'react-helmet-async';
+import { isValidSlug, isNotFoundError } from '../utils/validation';
 
 export default function DictionaryTermPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -15,10 +16,23 @@ export default function DictionaryTermPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (slug) {
-      fetchTerm(slug);
+    if (!slug || !isValidSlug(slug)) {
+      navigate('/dictionnaire-crypto', { replace: true });
+      return;
     }
-  }, [slug]);
+    
+    fetchTerm(slug);
+    
+    // Timeout pour éviter les loadings infinis
+    const timeout = setTimeout(() => {
+      if (loading) {
+        setError('Délai d\'attente dépassé');
+        setLoading(false);
+      }
+    }, 10000);
+    
+    return () => clearTimeout(timeout);
+  }, [slug, navigate]);
 
   const fetchTerm = async (termSlug: string) => {
     try {
@@ -55,6 +69,13 @@ export default function DictionaryTermPage() {
       }
     } catch (error) {
       console.error('Error fetching term:', error);
+      
+      if (isNotFoundError(error)) {
+        // Terme non trouvé, rediriger vers la liste
+        navigate('/dictionnaire-crypto', { replace: true });
+        return;
+      }
+      
       setError('Une erreur est survenue lors du chargement de la définition.');
     } finally {
       setLoading(false);

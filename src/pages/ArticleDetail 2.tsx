@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Heart, Calendar, ArrowLeft, Clock, Share2, Bookmark, Eye, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import type { Article } from '../types/article';
 import SEOHead from '../components/SEOHead';
 import ArticleSchema from '../components/ArticleSchema';
 import SocialShareButtons from '../components/SocialShareButtons';
-import { isValidSlug, isNotFoundError } from '../utils/validation';
 
 const calculateReadingTime = (content: string): number => {
   const wordsPerMinute = 200;
@@ -16,7 +15,6 @@ const calculateReadingTime = (content: string): number => {
 
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
   const [isLiked, setIsLiked] = useState(false);
@@ -25,23 +23,8 @@ export default function ArticleDetail() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!slug || !isValidSlug(slug)) {
-      navigate('/articles', { replace: true });
-      return;
-    }
-    
     fetchArticle();
-    
-    // Timeout pour éviter les loadings infinis
-    const timeout = setTimeout(() => {
-      if (loading) {
-        setError('Délai d\'attente dépassé');
-        setLoading(false);
-      }
-    }, 10000);
-    
-    return () => clearTimeout(timeout);
-  }, [slug, navigate]);
+  }, [slug]);
 
   const fetchArticle = async () => {
     try {
@@ -94,13 +77,6 @@ export default function ArticleDetail() {
       }
     } catch (error) {
       console.error('Error fetching article:', error);
-      
-      if (isNotFoundError(error)) {
-        // Article non trouvé, rediriger vers la liste
-        navigate('/articles', { replace: true });
-        return;
-      }
-      
       setError('Une erreur est survenue lors du chargement de l\'article.');
     } finally {
       setLoading(false);
@@ -144,11 +120,13 @@ export default function ArticleDetail() {
         // Fallback pour les navigateurs qui ne supportent pas Web Share API
         await navigator.clipboard.writeText(window.location.href);
         // Vous pourriez ajouter une notification toast ici
+        console.log('Lien copié dans le presse-papier');
       }
     } catch (error) {
       // Fallback en cas d'erreur
       try {
         await navigator.clipboard.writeText(window.location.href);
+        console.log('Lien copié dans le presse-papier');
       } catch (clipboardError) {
         console.error('Error sharing and copying:', error, clipboardError);
       }
