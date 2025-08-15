@@ -1,7 +1,8 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
-interface Props {
+interface Props extends WithTranslation {
   children: ReactNode;
 }
 
@@ -36,22 +37,22 @@ class ErrorBoundary extends Component<Props, State> {
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Erreur de chargement
+              {this.props.t('errorBoundary.header.title')}
             </h1>
             <p className="text-gray-600 mb-6">
-              Une erreur s'est produite lors du chargement de l'application.
+              {this.props.t('errorBoundary.header.subtitle')}
             </p>
             <button
               onClick={this.handleReload}
               className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <RefreshCw className="h-4 w-4 mr-2" />
-              Recharger la page
+              {this.props.t('errorBoundary.buttons.reload')}
             </button>
             {process.env.NODE_ENV === 'development' && (
               <details className="mt-4 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500">
-                  Détails de l'erreur (dev uniquement)
+                  {this.props.t('errorBoundary.content.devDetails')}
                 </summary>
                 <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">
                   {this.state.error?.stack}
@@ -67,4 +68,4 @@ class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-export default ErrorBoundary;
+export default withTranslation()(ErrorBoundary);

@@ -743,7 +743,6 @@ export const module20Questions = [
 ];
 
 // Utility function to get questions by module
- pour récupérer les questions d'un module
 export const getQuestionsByModule = (moduleId: string) => {
   const moduleMap: Record<string, any[]> = {
     'module-1': module1Questions,

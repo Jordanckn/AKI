@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Mail, MessageSquare, Send } from 'lucide-react';
 import SEOHead from '../components/SEOHead';
+import { useTranslation } from 'react-i18next';
 
 export default function Support() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,7 +19,7 @@ export default function Support() {
     setIsSubmitting(true);
     
     try {
-      // Ici, nous utilisons un service de formulaire gratuit pour envoyer l'email
+      // Here we use a free form service to send the email
       const response = await fetch('https://formsubmit.co/ajax/jordan.cinvest@gmail.com', {
         method: 'POST',
         headers: {
@@ -26,7 +28,7 @@ export default function Support() {
         },
         body: JSON.stringify({
           ...formData,
-          _subject: `Nouvelle demande d'assistance Alyah: ${formData.subject}`,
+          _subject: `${t('supportPage.form.emailSubjectPrefix')}: ${formData.subject}`,
         }),
       });
 
@@ -54,17 +56,18 @@ export default function Support() {
   return (
     <>
     <SEOHead
-      title="Assistance"
-      description="Contactez l'équipe d'Alyah Knowledge pour toute question ou assistance. Nous sommes là pour vous aider."
+      title={t('supportPage.seo.title')}
+      description={t('supportPage.seo.description')}
       canonicalUrl="https://alyah-knowledge.com/support"
     />
     <div className="min-h-screen pt-28 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Assistance</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            {t('supportPage.header.title')}
+          </h1>
           <p className="text-xl text-gray-600">
-            Notre équipe est là pour vous aider. Remplissez le formulaire ci-dessous
-            et nous vous répondrons dans les plus brefs délais.
+            {t('supportPage.header.subtitle')}
           </p>
         </div>
 
@@ -73,7 +76,7 @@ export default function Support() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Nom complet
+                  {t('supportPage.form.labels.name')}
                 </label>
                 <div className="relative">
                   <input
@@ -83,17 +86,17 @@ export default function Support() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2
                       focus:ring-blue-500 focus:border-transparent transition-all duration-200
                       placeholder-gray-400"
-                    placeholder="Votre nom"
+                    placeholder={t('supportPage.form.placeholders.name')}
                   />
                 </div>
               </div>
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
+                  {t('supportPage.form.labels.email')}
                 </label>
                 <div className="relative">
                   <input
@@ -103,10 +106,10 @@ export default function Support() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2
                       focus:ring-blue-500 focus:border-transparent transition-all duration-200
                       placeholder-gray-400"
-                    placeholder="votre@email.com"
+                    placeholder={t('supportPage.form.placeholders.email')}
                   />
                   <Mail className="absolute right-3 top-3 h-5 w-5 text-gray-400" />
                 </div>
@@ -115,7 +118,7 @@ export default function Support() {
 
             <div>
               <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                Sujet
+                {t('supportPage.form.labels.subject')}
               </label>
               <input
                 type="text"
@@ -124,16 +127,16 @@ export default function Support() {
                 required
                 value={formData.subject}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2
                   focus:ring-blue-500 focus:border-transparent transition-all duration-200
                   placeholder-gray-400"
-                placeholder="Le sujet de votre message"
+                placeholder={t('supportPage.form.placeholders.subject')}
               />
             </div>
 
             <div>
               <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                Message
+                {t('supportPage.form.labels.message')}
               </label>
               <div className="relative">
                 <textarea
@@ -143,10 +146,10 @@ export default function Support() {
                   value={formData.message}
                   onChange={handleChange}
                   rows={6}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2
                     focus:ring-blue-500 focus:border-transparent transition-all duration-200
                     placeholder-gray-400 resize-none"
-                  placeholder="Décrivez votre demande en détail..."
+                  placeholder={t('supportPage.form.placeholders.message')}
                 />
                 <MessageSquare className="absolute right-3 top-3 h-5 w-5 text-gray-400" />
               </div>
@@ -166,12 +169,12 @@ export default function Support() {
                 {isSubmitting ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
-                    Envoi en cours...
+                    {t('supportPage.buttons.sending')}
                   </>
                 ) : (
                   <>
                     <Send className="h-5 w-5 mr-2" />
-                    Envoyer le message
+                    {t('supportPage.buttons.submit')}
                   </>
                 )}
               </button>
@@ -186,7 +189,7 @@ export default function Support() {
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium">
-                    Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.
+                    {t('supportPage.messages.success')}
                   </p>
                 </div>
               </div>
@@ -201,7 +204,7 @@ export default function Support() {
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium">
-                    Une erreur est survenue lors de l'envoi du message. Veuillez réessayer plus tard.
+                    {t('supportPage.messages.error')}
                   </p>
                 </div>
               </div>

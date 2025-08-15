@@ -265,18 +265,178 @@ const resources = {
         dictionary: 'Dictionnaire',
         copyright: 'Copyright © {year} Alyah Knowledge Investissement. Tous droits réservés.'
       },
-      // Messages d'erreur globaux
+      supportPage: {
+        seo: {
+          title: 'Assistance',
+          description: "Contactez l'équipe d'Alyah Knowledge pour toute question ou assistance. Nous sommes là pour vous aider."
+        },
+        header: {
+          title: 'Assistance',
+          subtitle: "Notre équipe est là pour vous aider. Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais."
+        },
+        form: {
+          labels: {
+            name: 'Nom complet',
+            email: 'Email',
+            subject: 'Sujet',
+            message: 'Message'
+          },
+          placeholders: {
+            name: 'Votre nom',
+            email: 'votre@email.com',
+            subject: 'Le sujet de votre message',
+            message: 'Décrivez votre demande en détail...'
+          },
+          emailSubjectPrefix: "Nouvelle demande d'assistance Alyah"
+        },
+        buttons: {
+          submit: 'Envoyer le message',
+          sending: 'Envoi en cours...'
+        },
+        messages: {
+          success: 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
+          error: "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer plus tard."
+        }
+      },
+      notFoundPage: {
+        seo: {
+          title: 'Page non trouvée - Alyah Knowledge',
+          description: "La page que vous recherchez n'existe pas. Explorez nos ressources crypto et formations."
+        },
+        header: {
+          title: 'Page non trouvée',
+          subtitle: "La page que vous recherchez n'existe pas ou a été déplacée."
+        },
+        buttons: {
+          home: 'Accueil',
+          dictionary: 'Dictionnaire',
+          articles: 'Articles'
+        },
+        content: {
+          popularResources: 'Ressources populaires',
+          link1: '→ Formation crypto complète',
+          link2: '→ Marché en temps réel',
+          link3: "→ Qu'est-ce que Bitcoin ?",
+          link4: '→ Signaux de trading'
+        }
+      },
+      errorBoundary: {
+        header: {
+          title: 'Erreur de chargement',
+          subtitle: "Une erreur s'est produite lors du chargement de l'application."
+        },
+        buttons: {
+          reload: 'Recharger la page'
+        },
+        content: {
+          devDetails: "Détails de l'erreur (dev uniquement)"
+        }
+      },
+      blockchainFundamentalsPage: {
+        seo: {
+          title: 'Les Fondamentaux de la Blockchain',
+          description: 'Comprendre les bases de la technologie blockchain et son fonctionnement. Module gratuit de notre formation crypto.'
+        },
+        access: {
+          title: 'Contenu réservé aux membres',
+          description: "Inscrivez-vous gratuitement pour accéder à la première leçon : « Qu'est-ce que la blockchain ? » et commencez à découvrir l'univers des cryptomonnaies.",
+          button: "S'inscrire gratuitement"
+        },
+        navigation: {
+          back: 'Retour aux modules',
+          next: 'Module suivant'
+        },
+        header: {
+          title: 'Les Fondamentaux de la Blockchain',
+          subtitle: 'Comprendre les bases de la technologie blockchain et son fonctionnement',
+          readingTime: 'Temps de lecture : 15 minutes'
+        },
+        content: {
+          intro: 'La blockchain est une technologie révolutionnaire qui a transformé le monde numérique en offrant un système sécurisé, décentralisé et transparent pour enregistrer des transactions. Elle est surtout connue pour être la base des cryptomonnaies comme le Bitcoin, mais ses applications vont bien au-delà.',
+          definition: {
+            title: 'Définition de la Blockchain',
+            paragraph: "La blockchain est un registre numérique décentralisé qui enregistre des transactions de manière transparente et immuable. Contrairement aux bases de données traditionnelles qui sont centralisées, la blockchain est répartie sur un réseau d'ordinateurs (appelés nœuds) qui travaillent ensemble pour valider et enregistrer les transactions.",
+            imageCaption: "Visualisation d'un réseau blockchain et ses interconnexions",
+            imageAlt: "Visualisation d'un réseau blockchain"
+          },
+          creation: {
+            title: 'Pourquoi la blockchain a-t-elle été créée ?',
+            paragraph1: "Avant d'expliquer le fonctionnement de la blockchain, il est essentiel de comprendre pourquoi cette technologie a vu le jour.",
+            example: "Prenons un exemple simple : une personne souhaite envoyer de l'argent à une autre. Dans le système financier traditionnel, il est impossible de faire ce transfert directement entre deux individus via Internet sans passer par un intermédiaire, comme une banque ou un service de paiement.",
+            paragraph2: "Lorsqu'une personne effectue un virement bancaire, plusieurs étapes se déroulent :",
+            step1: "La banque vérifie que le compte de l'émetteur dispose des fonds nécessaires.",
+            step2: "Elle valide la transaction et transfère l'argent au compte du destinataire.",
+            step3: "L'opération est inscrite dans le registre comptable de la banque.",
+            bankRole: "Le rôle de la banque est donc central. C'est un tiers de confiance qui garantit la validité des transactions.",
+            issuesIntro: 'Cependant, ce système présente plusieurs inconvénients :',
+            issue1: "Dépendance aux institutions financières qui contrôlent l'accès aux services bancaires.",
+            issue2: 'Frais de transaction parfois élevés.',
+            issue3: 'Délais de traitement qui peuvent ralentir les transactions.',
+            issue4: 'Risque de centralisation et de manipulation des données.',
+            solution: "C'est précisément pour répondre à ces problèmes que la blockchain a été créée.",
+            solution2: "Elle permet de réaliser des transactions de manière sécurisée, transparente et sans intermédiaire, tout en éliminant les risques liés à la centralisation des données."
+          },
+          operation: {
+            title: 'Comment fonctionne la Blockchain ?',
+            paragraph1: "La blockchain est un registre numérique décentralisé qui enregistre toutes les transactions effectuées sur un réseau. Elle fonctionne comme un grand livre comptable, mais au lieu d'être contrôlé par une seule entité, il est partagé entre de nombreux participants appelés nœuds.",
+            paragraph2: "Chaque transaction effectuée sur la blockchain est inscrite dans un bloc de données, qui est ensuite ajouté à une chaîne de blocs. Ce processus suit plusieurs étapes :",
+            recording: {
+              title: 'Enregistrement et Validation',
+              item1: 'Enregistrement de la transaction sur le réseau',
+              item2: 'Regroupement des transactions dans un bloc',
+              item3: 'Validation par les mineurs ou validateurs'
+            },
+            consensus: {
+              title: 'Mécanismes de Consensus',
+              item1: 'Proof of Work (PoW) : Résolution de problèmes cryptographiques',
+              item2: 'Proof of Stake (PoS) : Mise en jeu de cryptomonnaies'
+            }
+          },
+          difference: {
+            title: 'Différence entre la Blockchain et le Bitcoin',
+            blockchain: {
+              title: 'La Blockchain',
+              description: 'Une technologie, un protocole informatique qui permet de stocker et de sécuriser des transactions de manière décentralisée.'
+            },
+            bitcoin: {
+              title: 'Le Bitcoin',
+              description: 'Une application de la blockchain, une cryptomonnaie qui utilise cette technologie pour exister et fonctionner.'
+            }
+          },
+          advantages: {
+            title: 'Pourquoi la blockchain est-elle révolutionnaire ?',
+            security: {
+              title: 'Sécurité et Immuabilité',
+              description: "Une fois une transaction enregistrée, elle ne peut plus être modifiée ni supprimée."
+            },
+            decentralization: {
+              title: 'Décentralisation',
+              description: "Les données sont réparties sur des milliers d'ordinateurs à travers le monde."
+            }
+          },
+          conclusion: {
+            title: 'Conclusion',
+            paragraph1: 'La blockchain est une technologie qui a le potentiel de révolutionner de nombreux secteurs en offrant sécurité, transparence et décentralisation. Son adoption croissante laisse entrevoir un avenir où les transactions seront plus sécurisées, efficaces et accessibles à tous.',
+            paragraph2: 'Dans les prochains modules, nous aborderons des sujets plus avancés comme les principes de la décentralisation, la cryptographie et la sécurité, ainsi que les différents types de blockchain.'
+          }
+        }
+      },
       errors: {
-        generic: 'Une erreur s\'est produite',
-        networkError: 'Erreur de connexion réseau',
-        serverError: 'Erreur du serveur',
-        unauthorized: 'Accès non autorisé',
-        forbidden: 'Accès interdit',
-        notFound: 'Page non trouvée',
-        validation: 'Erreur de validation',
-        tryAgain: 'Veuillez réessayer',
-        goHome: 'Retour à l\'accueil',
-        contactSupport: 'Contacter le support'
+        network: 'Erreur réseau. Veuillez vérifier votre connexion.',
+        unknown: 'Une erreur inconnue est survenue.',
+        unauthorized: 'Vous devez être connecté pour accéder à cette page.',
+        forbidden: "Vous n'avez pas la permission d'accéder à cette ressource.",
+        notFound: 'La ressource demandée est introuvable.',
+        serverError: 'Erreur interne du serveur. Veuillez réessayer plus tard.',
+        timeout: 'La demande a expiré. Veuillez réessayer.',
+        invalidInput: 'Entrée invalide.',
+        emailInUse: 'Cette adresse e-mail est déjà utilisée.',
+        weakPassword: 'Mot de passe trop faible.',
+        tooManyRequests: 'Trop de tentatives. Veuillez réessayer plus tard.',
+        maintenance: 'Le service est actuellement en maintenance.',
+        paymentFailed: 'Le paiement a échoué.',
+        formIncomplete: 'Veuillez remplir tous les champs requis.',
+        subscriptionRequired: 'Un abonnement actif est requis.'
       },
       quizQuestions: {
     question1: {
@@ -1205,18 +1365,178 @@ const resources = {
         dictionary: 'Dictionary',
         copyright: 'Copyright © {year} Alyah Knowledge Investment. All rights reserved.'
       },
-      // Global error messages
+      supportPage: {
+        seo: {
+          title: 'Support',
+          description: "Contact the Alyah Knowledge team for any questions or assistance. We're here to help."
+        },
+        header: {
+          title: 'Support',
+          subtitle: "Our team is here to help. Fill out the form below and we'll respond as soon as possible."
+        },
+        form: {
+          labels: {
+            name: 'Full name',
+            email: 'Email',
+            subject: 'Subject',
+            message: 'Message'
+          },
+          placeholders: {
+            name: 'Your name',
+            email: 'your@email.com',
+            subject: 'The subject of your message',
+            message: 'Describe your request in detail...'
+          },
+          emailSubjectPrefix: 'New Alyah support request'
+        },
+        buttons: {
+          submit: 'Send message',
+          sending: 'Sending...'
+        },
+        messages: {
+          success: 'Your message has been sent successfully. We will respond as soon as possible.',
+          error: 'An error occurred while sending the message. Please try again later.'
+        }
+      },
+      notFoundPage: {
+        seo: {
+          title: 'Page not found - Alyah Knowledge',
+          description: 'The page you are looking for does not exist. Explore our crypto resources and training.'
+        },
+        header: {
+          title: 'Page not found',
+          subtitle: 'The page you are looking for does not exist or has been moved.'
+        },
+        buttons: {
+          home: 'Home',
+          dictionary: 'Dictionary',
+          articles: 'Articles'
+        },
+        content: {
+          popularResources: 'Popular resources',
+          link1: '→ Complete crypto training',
+          link2: '→ Real-time market',
+          link3: '→ What is Bitcoin?',
+          link4: '→ Trading signals'
+        }
+      },
+      errorBoundary: {
+        header: {
+          title: 'Loading error',
+          subtitle: 'An error occurred while loading the application.'
+        },
+        buttons: {
+          reload: 'Reload page'
+        },
+        content: {
+          devDetails: 'Error details (dev only)'
+        }
+      },
+      blockchainFundamentalsPage: {
+        seo: {
+          title: 'Blockchain Fundamentals',
+          description: 'Understand the basics of blockchain technology and how it works. Free module from our crypto course.'
+        },
+        access: {
+          title: 'Members-only content',
+          description: 'Sign up for free to access the first lesson: “What is blockchain?” and start exploring the world of cryptocurrencies.',
+          button: 'Sign up for free'
+        },
+        navigation: {
+          back: 'Back to modules',
+          next: 'Next module'
+        },
+        header: {
+          title: 'Blockchain Fundamentals',
+          subtitle: 'Understand the basics of blockchain technology and how it works',
+          readingTime: 'Reading time: 15 minutes'
+        },
+        content: {
+          intro: 'Blockchain is a revolutionary technology that has transformed the digital world by providing a secure, decentralized, and transparent system for recording transactions. It is best known as the foundation of cryptocurrencies like Bitcoin, but its applications go far beyond.',
+          definition: {
+            title: 'Definition of Blockchain',
+            paragraph: 'Blockchain is a decentralized digital ledger that records transactions transparently and immutably. Unlike traditional databases that are centralized, the blockchain is distributed across a network of computers (called nodes) that work together to validate and record transactions.',
+            imageCaption: 'Visualization of a blockchain network and its interconnections',
+            imageAlt: 'Blockchain network visualization'
+          },
+          creation: {
+            title: 'Why was blockchain created?',
+            paragraph1: 'Before explaining how blockchain works, it is essential to understand why this technology emerged.',
+            example: 'Take a simple example: one person wants to send money to another. In the traditional financial system, it is impossible to transfer funds directly between two individuals over the internet without going through an intermediary such as a bank or payment service.',
+            paragraph2: 'When someone makes a bank transfer, several steps occur:',
+            step1: 'The bank verifies that the sender’s account has sufficient funds.',
+            step2: 'It validates the transaction and transfers the money to the recipient’s account.',
+            step3: 'The operation is recorded in the bank’s ledger.',
+            bankRole: 'The bank’s role is therefore central. It acts as a trusted third party that guarantees the validity of transactions.',
+            issuesIntro: 'However, this system has several drawbacks:',
+            issue1: 'Dependence on financial institutions that control access to banking services.',
+            issue2: 'Sometimes high transaction fees.',
+            issue3: 'Processing delays that can slow down transactions.',
+            issue4: 'Risk of centralization and data manipulation.',
+            solution: 'Blockchain was created precisely to address these issues.',
+            solution2: 'It enables transactions to be conducted securely, transparently, and without intermediaries, eliminating the risks associated with data centralization.'
+          },
+          operation: {
+            title: 'How does blockchain work?',
+            paragraph1: 'Blockchain is a decentralized digital ledger that records all transactions made on a network. It functions like a large accounting book, but instead of being controlled by a single entity, it is shared among many participants called nodes.',
+            paragraph2: 'Each transaction carried out on the blockchain is recorded in a block of data, which is then added to a chain of blocks. This process follows several steps:',
+            recording: {
+              title: 'Recording and Validation',
+              item1: 'Recording the transaction on the network',
+              item2: 'Grouping transactions into a block',
+              item3: 'Validation by miners or validators'
+            },
+            consensus: {
+              title: 'Consensus Mechanisms',
+              item1: 'Proof of Work (PoW): Solving cryptographic problems',
+              item2: 'Proof of Stake (PoS): Staking cryptocurrencies'
+            }
+          },
+          difference: {
+            title: 'Difference between Blockchain and Bitcoin',
+            blockchain: {
+              title: 'Blockchain',
+              description: 'A technology, a computer protocol that allows transactions to be stored and secured in a decentralized way.'
+            },
+            bitcoin: {
+              title: 'Bitcoin',
+              description: 'An application of blockchain, a cryptocurrency that uses this technology to exist and operate.'
+            }
+          },
+          advantages: {
+            title: 'Why is blockchain revolutionary?',
+            security: {
+              title: 'Security and Immutability',
+              description: 'Once a transaction is recorded, it cannot be modified or deleted.'
+            },
+            decentralization: {
+              title: 'Decentralization',
+              description: 'Data is distributed across thousands of computers worldwide.'
+            }
+          },
+          conclusion: {
+            title: 'Conclusion',
+            paragraph1: 'Blockchain has the potential to revolutionize many sectors by providing security, transparency, and decentralization. Its growing adoption points to a future where transactions are more secure, efficient, and accessible to all.',
+            paragraph2: 'In the next modules, we will cover more advanced topics such as decentralization principles, cryptography and security, and the different types of blockchain.'
+          }
+        }
+      },
       errors: {
-        generic: 'An error occurred',
-        networkError: 'Network connection error',
-        serverError: 'Server error',
-        unauthorized: 'Unauthorized access',
-        forbidden: 'Access forbidden',
-        notFound: 'Page not found',
-        validation: 'Validation error',
-        tryAgain: 'Please try again',
-        goHome: 'Go home',
-        contactSupport: 'Contact support'
+        network: 'Network error. Please check your connection.',
+        unknown: 'An unknown error occurred.',
+        unauthorized: 'You must be logged in to access this page.',
+        forbidden: 'You do not have permission to access this resource.',
+        notFound: 'The requested resource was not found.',
+        serverError: 'Internal server error. Please try again later.',
+        timeout: 'The request timed out. Please try again.',
+        invalidInput: 'Invalid input.',
+        emailInUse: 'This email address is already in use.',
+        weakPassword: 'Password is too weak.',
+        tooManyRequests: 'Too many attempts. Please try again later.',
+        maintenance: 'The service is currently under maintenance.',
+        paymentFailed: 'Payment failed.',
+        formIncomplete: 'Please complete all required fields.',
+        subscriptionRequired: 'An active subscription is required.'
       },
       quizQuestions: {
     question1: {

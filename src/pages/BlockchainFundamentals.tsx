@@ -5,12 +5,14 @@ import ModuleQuiz from '../components/ModuleQuiz';
 import { checkModuleAccess } from '../lib/moduleAccess';
 import SEOHead from '../components/SEOHead';
 import CourseSchema from '../components/CourseSchema';
+import { useTranslation } from 'react-i18next';
 
 export default function BlockchainFundamentals() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const verifyAccess = async () => {
@@ -51,18 +53,17 @@ export default function BlockchainFundamentals() {
             <Lock className="h-8 w-8 text-blue-600" />
           </div>
           <h3 className="text-2xl font-bold text-gray-900 mb-2">
-            Contenu réservé aux membres
+            {t('blockchainFundamentalsPage.access.title')}
           </h3>
           <p className="text-gray-600 mb-6">
-            Inscrivez-vous gratuitement pour accéder à la première leçon : « Qu'est-ce que la blockchain ? » 
-            et commencez à découvrir l'univers des cryptomonnaies.
+            {t('blockchainFundamentalsPage.access.description')}
           </p>
           <button
             onClick={() => navigate('/')}
             className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl 
               hover:from-blue-700 hover:to-purple-700 transition-colors"
           >
-            S'inscrire gratuitement
+            {t('blockchainFundamentalsPage.access.button')}
           </button>
         </div>
       </div>
@@ -71,15 +72,15 @@ export default function BlockchainFundamentals() {
 
   const content = (
     <>
-      <SEOHead 
-        title="Les Fondamentaux de la Blockchain"
-        description="Comprendre les bases de la technologie blockchain et son fonctionnement. Module gratuit de notre formation crypto."
+      <SEOHead
+        title={t('blockchainFundamentalsPage.seo.title')}
+        description={t('blockchainFundamentalsPage.seo.description')}
         canonicalUrl="https://alyah-knowledge.com/formation/comprendre-la-crypto/fondamentaux-blockchain"
       />
-      
+
       <CourseSchema
-        name="Les Fondamentaux de la Blockchain"
-        description="Comprendre les bases de la technologie blockchain et son fonctionnement. Module gratuit de formation crypto."
+        name={t('blockchainFundamentalsPage.seo.title')}
+        description={t('blockchainFundamentalsPage.seo.description')}
         isAccessibleForFree={true}
         cssSelector=".bg-white.rounded-2xl.shadow-sm"
       />
@@ -87,11 +88,11 @@ export default function BlockchainFundamentals() {
       {/* Navigation */}
       <Link
         to="/knowledge/crypto"
-        className="inline-flex items-center text-gray-600 hover:text-blue-600 
+        className="inline-flex items-center text-gray-600 hover:text-blue-600
           transition-colors duration-200 mb-8"
       >
         <ArrowLeft className="h-5 w-5 mr-2" />
-        Retour aux modules
+        {t('blockchainFundamentalsPage.navigation.back')}
       </Link>
 
       {/* Header */}
@@ -101,15 +102,15 @@ export default function BlockchainFundamentals() {
           <Brain className="w-8 h-8" />
         </div>
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Les Fondamentaux de la Blockchain
+          {t('blockchainFundamentalsPage.header.title')}
         </h1>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
-          Comprendre les bases de la technologie blockchain et son fonctionnement
+          {t('blockchainFundamentalsPage.header.subtitle')}
         </p>
         <div className="inline-flex items-center justify-center px-4 py-2 rounded-full
           bg-gray-100 text-gray-600 text-sm">
           <Clock className="w-4 h-4 mr-2" />
-          Temps de lecture : 15 minutes
+          {t('blockchainFundamentalsPage.header.readingTime')}
         </div>
       </div>
 
@@ -120,126 +121,126 @@ export default function BlockchainFundamentals() {
             {/* Introduction */}
             <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl mb-12">
               <p className="text-gray-700 leading-relaxed">
-                La <strong>blockchain</strong> est une technologie révolutionnaire qui a transformé le monde numérique 
-                en offrant un système sécurisé, décentralisé et transparent pour enregistrer des 
-                transactions. Elle est surtout connue pour être la base des cryptomonnaies comme le 
-                Bitcoin, mais ses applications vont bien au-delà.
+                {t('blockchainFundamentalsPage.content.intro')}
               </p>
             </div>
 
             {/* Définition */}
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
               <Lock className="h-6 w-6 text-blue-600" />
-              Définition de la Blockchain
+              {t('blockchainFundamentalsPage.content.definition.title')}
             </h2>
             <p className="text-gray-700 mb-8">
-              La <strong>blockchain</strong> est un registre numérique décentralisé qui enregistre des transactions de manière transparente et 
-              immuable. Contrairement aux bases de données traditionnelles qui sont centralisées, 
-              la blockchain est répartie sur un réseau d'ordinateurs (appelés <strong>nœuds</strong>) 
-              qui travaillent ensemble pour valider et enregistrer les transactions.
+              {t('blockchainFundamentalsPage.content.definition.paragraph')}
             </p>
 
             {/* Image de la blockchain */}
             <div className="relative h-80 mb-12 rounded-xl overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1644088379091-d574269d422f?auto=format&fit=crop&q=80"
-                alt="Blockchain Network Visualization"
+                alt={t('blockchainFundamentalsPage.content.definition.imageAlt')}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 text-white text-sm">
-                Visualisation d'un réseau blockchain et ses interconnexions
+                {t('blockchainFundamentalsPage.content.definition.imageCaption')}
               </div>
             </div>
 
             {/* Pourquoi la blockchain */}
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
               <Network className="h-6 w-6 text-orange-600" />
-              Pourquoi la blockchain a-t-elle été créée ?
+              {t('blockchainFundamentalsPage.content.creation.title')}
             </h2>
 
             <p className="text-gray-700 mb-6">
-              Avant d'expliquer le fonctionnement de la blockchain, il est essentiel de comprendre pourquoi cette technologie a vu le jour.
+              {t('blockchainFundamentalsPage.content.creation.paragraph1')}
             </p>
 
             <p className="text-gray-700 mb-6">
-              Prenons un exemple simple : une personne souhaite envoyer de l'argent à une autre.
-              Dans le <strong>système financier traditionnel</strong>, il est impossible de faire ce transfert directement entre deux individus via Internet sans passer par un <strong>intermédiaire</strong>, comme une banque ou un service de paiement.
+              {t('blockchainFundamentalsPage.content.creation.example')}
             </p>
 
             <p className="text-gray-700 mb-6">
-              Lorsqu'une personne effectue un <strong>virement bancaire</strong>, plusieurs étapes se déroulent :
-            </p>
-
-            <ul className="list-disc pl-6 mb-6 text-gray-700">
-              <li>La banque vérifie que le compte de l'émetteur dispose des fonds nécessaires.</li>
-              <li>Elle valide la transaction et transfère l'argent au compte du destinataire.</li>
-              <li>L'opération est inscrite dans le registre comptable de la banque.</li>
-            </ul>
-
-            <p className="text-gray-700 mb-6">
-              Le rôle de la banque est donc central. C'est un <strong>tiers de confiance</strong> qui garantit la validité des transactions. Cependant, ce système présente plusieurs inconvénients :
+              {t('blockchainFundamentalsPage.content.creation.paragraph2')}
             </p>
 
             <ul className="list-disc pl-6 mb-6 text-gray-700">
-              <li><strong>Dépendance</strong> aux institutions financières qui contrôlent l'accès aux services bancaires.</li>
-              <li>Frais de transaction parfois élevés.</li>
-              <li>Délais de traitement qui peuvent ralentir les transactions.</li>
-              <li>Risque de centralisation et de manipulation des données.</li>
+              <li>{t('blockchainFundamentalsPage.content.creation.step1')}</li>
+              <li>{t('blockchainFundamentalsPage.content.creation.step2')}</li>
+              <li>{t('blockchainFundamentalsPage.content.creation.step3')}</li>
             </ul>
 
             <p className="text-gray-700 mb-6">
-              C'est précisément pour répondre à ces problèmes que la <strong>blockchain</strong> a été créée.
+              {t('blockchainFundamentalsPage.content.creation.bankRole')}
+            </p>
+
+            <p className="text-gray-700 mb-6">
+              {t('blockchainFundamentalsPage.content.creation.issuesIntro')}
+            </p>
+
+            <ul className="list-disc pl-6 mb-6 text-gray-700">
+              <li>{t('blockchainFundamentalsPage.content.creation.issue1')}</li>
+              <li>{t('blockchainFundamentalsPage.content.creation.issue2')}</li>
+              <li>{t('blockchainFundamentalsPage.content.creation.issue3')}</li>
+              <li>{t('blockchainFundamentalsPage.content.creation.issue4')}</li>
+            </ul>
+
+            <p className="text-gray-700 mb-6">
+              {t('blockchainFundamentalsPage.content.creation.solution')}
             </p>
 
             <p className="text-gray-700 mb-8">
-              Elle permet de réaliser des transactions de manière <strong>sécurisée</strong>, <strong>transparente</strong> et <strong>sans intermédiaire</strong>, tout en éliminant les risques liés à la centralisation des données.
+              {t('blockchainFundamentalsPage.content.creation.solution2')}
             </p>
 
             {/* Fonctionnement */}
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
               <Cpu className="h-6 w-6 text-purple-600" />
-              Comment fonctionne la Blockchain ?
+              {t('blockchainFundamentalsPage.content.operation.title')}
             </h2>
 
             <p className="text-gray-700 mb-6">
-              La blockchain est un <strong>registre numérique décentralisé</strong> qui enregistre toutes les transactions effectuées sur un réseau.
-              Elle fonctionne comme un grand livre comptable, mais au lieu d'être contrôlé par une seule entité, il est partagé entre de nombreux participants appelés <strong>nœuds</strong>.
+              {t('blockchainFundamentalsPage.content.operation.paragraph1')}
             </p>
 
             <p className="text-gray-700 mb-6">
-              Chaque transaction effectuée sur la blockchain est inscrite dans un <strong>bloc de données</strong>, qui est ensuite ajouté à une chaîne de blocs. Ce processus suit plusieurs étapes :
+              {t('blockchainFundamentalsPage.content.operation.paragraph2')}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Enregistrement et Validation</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  {t('blockchainFundamentalsPage.content.operation.recording.title')}
+                </h3>
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 rounded-full bg-blue-600 mt-2 flex-shrink-0" />
-                    <span><strong>Enregistrement</strong> de la transaction sur le réseau</span>
+                    <span>{t('blockchainFundamentalsPage.content.operation.recording.item1')}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 rounded-full bg-blue-600 mt-2 flex-shrink-0" />
-                    <span><strong>Regroupement</strong> des transactions dans un bloc</span>
+                    <span>{t('blockchainFundamentalsPage.content.operation.recording.item2')}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 rounded-full bg-blue-600 mt-2 flex-shrink-0" />
-                    <span><strong>Validation</strong> par les mineurs ou validateurs</span>
+                    <span>{t('blockchainFundamentalsPage.content.operation.recording.item3')}</span>
                   </li>
                 </ul>
               </div>
 
               <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Mécanismes de Consensus</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  {t('blockchainFundamentalsPage.content.operation.consensus.title')}
+                </h3>
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 rounded-full bg-purple-600 mt-2 flex-shrink-0" />
-                    <span><strong>Proof of Work (PoW)</strong> : Résolution de problèmes cryptographiques</span>
+                    <span>{t('blockchainFundamentalsPage.content.operation.consensus.item1')}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 rounded-full bg-purple-600 mt-2 flex-shrink-0" />
-                    <span><strong>Proof of Stake (PoS)</strong> : Mise en jeu de cryptomonnaies</span>
+                    <span>{t('blockchainFundamentalsPage.content.operation.consensus.item2')}</span>
                   </li>
                 </ul>
               </div>
@@ -248,21 +249,25 @@ export default function BlockchainFundamentals() {
             {/* Différence Blockchain vs Bitcoin */}
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
               <Network className="h-6 w-6 text-blue-600" />
-              Différence entre la Blockchain et le Bitcoin
+              {t('blockchainFundamentalsPage.content.difference.title')}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               <div className="bg-blue-50 p-6 rounded-xl">
-                <h3 className="font-semibold text-gray-900 mb-4">La Blockchain</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  {t('blockchainFundamentalsPage.content.difference.blockchain.title')}
+                </h3>
                 <p className="text-gray-700">
-                  Une <strong>technologie</strong>, un protocole informatique qui permet de stocker et de sécuriser des transactions de manière décentralisée.
+                  {t('blockchainFundamentalsPage.content.difference.blockchain.description')}
                 </p>
               </div>
 
               <div className="bg-purple-50 p-6 rounded-xl">
-                <h3 className="font-semibold text-gray-900 mb-4">Le Bitcoin</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  {t('blockchainFundamentalsPage.content.difference.bitcoin.title')}
+                </h3>
                 <p className="text-gray-700">
-                  Une <strong>application</strong> de la blockchain, une cryptomonnaie qui utilise cette technologie pour exister et fonctionner.
+                  {t('blockchainFundamentalsPage.content.difference.bitcoin.description')}
                 </p>
               </div>
             </div>
@@ -270,16 +275,18 @@ export default function BlockchainFundamentals() {
             {/* Avantages */}
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
               <Shield className="h-6 w-6 text-green-600" />
-              Pourquoi la blockchain est-elle révolutionnaire ?
+              {t('blockchainFundamentalsPage.content.advantages.title')}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               <div className="flex items-start gap-4 p-6 bg-green-50 rounded-xl">
                 <Shield className="h-6 w-6 text-green-600 flex-shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Sécurité et Immuabilité</h3>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    {t('blockchainFundamentalsPage.content.advantages.security.title')}
+                  </h3>
                   <p className="text-gray-700">
-                    Une fois une transaction enregistrée, elle ne peut plus être modifiée ni supprimée.
+                    {t('blockchainFundamentalsPage.content.advantages.security.description')}
                   </p>
                 </div>
               </div>
@@ -287,9 +294,11 @@ export default function BlockchainFundamentals() {
               <div className="flex items-start gap-4 p-6 bg-blue-50 rounded-xl">
                 <Network className="h-6 w-6 text-blue-600 flex-shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Décentralisation</h3>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    {t('blockchainFundamentalsPage.content.advantages.decentralization.title')}
+                  </h3>
                   <p className="text-gray-700">
-                    Les données sont réparties sur des milliers d'ordinateurs à travers le monde.
+                    {t('blockchainFundamentalsPage.content.advantages.decentralization.description')}
                   </p>
                 </div>
               </div>
@@ -297,17 +306,14 @@ export default function BlockchainFundamentals() {
 
             {/* Conclusion */}
             <div className="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-xl">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Conclusion</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                {t('blockchainFundamentalsPage.content.conclusion.title')}
+              </h2>
               <p className="text-gray-700 mb-4">
-                La blockchain est une technologie qui a le potentiel de révolutionner de nombreux 
-                secteurs en offrant <strong>sécurité</strong>, <strong>transparence</strong> et <strong>décentralisation</strong>. Son adoption 
-                croissante laisse entrevoir un avenir où les transactions seront plus sécurisées, 
-                efficaces et accessibles à tous.
+                {t('blockchainFundamentalsPage.content.conclusion.paragraph1')}
               </p>
               <p className="text-gray-700">
-                Dans les prochains modules, nous aborderons des sujets plus avancés comme les 
-                principes de la décentralisation, la cryptographie et la sécurité, ainsi que les 
-                différents types de blockchain.
+                {t('blockchainFundamentalsPage.content.conclusion.paragraph2')}
               </p>
             </div>
           </div>
@@ -323,17 +329,17 @@ export default function BlockchainFundamentals() {
             text-sm sm:text-base sm:px-6"
         >
           <ArrowLeft className="h-5 w-5 mr-2 flex-shrink-0" />
-          <span className="whitespace-nowrap">Retour aux modules</span>
+          <span className="whitespace-nowrap">{t('blockchainFundamentalsPage.navigation.back')}</span>
         </Link>
         <button
           onClick={() => setShowQuiz(true)}
-          className="flex items-center justify-center px-4 py-3 rounded-xl 
+          className="flex items-center justify-center px-4 py-3 rounded-xl
             bg-gradient-to-r from-blue-600 to-purple-600 text-white
-            font-medium transition-all duration-200 hover:from-blue-700 
+            font-medium transition-all duration-200 hover:from-blue-700
             hover:to-purple-700 transform hover:-translate-y-1
             text-sm sm:text-base sm:px-6 w-full"
         >
-          <span className="whitespace-nowrap">Module suivant</span>
+          <span className="whitespace-nowrap">{t('blockchainFundamentalsPage.navigation.next')}</span>
           <ArrowLeft className="h-5 w-5 ml-2 rotate-180 flex-shrink-0" />
         </button>
       </div>
